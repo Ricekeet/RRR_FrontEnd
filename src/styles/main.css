@@ -19,3 +19,39 @@
     padding-right: 5px;
     width: 50%;
 }
+
+/* loginBox contents */
+div.loginBox{
+    width: 40%;
+    text-align: center;
+    margin: 5%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-bottom: 4%;
+    padding-top: 4%;
+    border: grey solid 1px;
+}
+div.loginBox>h2{
+    margin-top: 5%;
+}
+div.loginBox>form>input[type=submit]{
+    color: white;
+    background-color: #282828;
+    margin-top: 20px;
+    padding-top: 2.5%;
+    padding-bottom: 2.5%;
+    font-size: 1.5em;
+    width: 50%;
+}
+div.loginBox>form>input[type=text],input[type=password],input[type=email]{
+    width: 80%;
+    margin-bottom: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+div.loginBox>div{
+    margin-top: 15px;
+}
+.inputLabel{
+    font-size: .8em;
+}

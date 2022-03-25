@@ -10,6 +10,7 @@ import Search from './pages/search';
 import MyRecipes from './pages/account/myrecipes';
 import Footer from './components/footer';
 import ToS from './pages/tos';
+import Register from './pages/account/register';
 
 
 function App () {
@@ -23,6 +24,7 @@ function App () {
                         <Route exact path='/about' element={<About/>}/>
                         <Route exact path='/account/login' element={<Login/>}/>
                         <Route exact path='/account/profile' element={<Profile/>}/>
+                        <Route exact path='/account/register' element={<Register/>}/>
                         <Route exact path='/search' element={<Search/>}/>
                         <Route exact path='/account/recipes' element={<MyRecipes/>}/>
                         <Route exact path='/tos' element={ToS}/>

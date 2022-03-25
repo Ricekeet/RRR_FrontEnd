@@ -19,7 +19,7 @@ class Footer extends React.Component{
                 </div>
                 <div className='footerSection'>
                     <div className='footerSubSection'>
-                        RadicalRandomRecipes © Copyright 2022
+                        Radical Random Recipes © Copyright 2022
                         <br/>
                         All Rights Reserved.
                     </div>

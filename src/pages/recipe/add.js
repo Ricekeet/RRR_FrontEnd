@@ -1,9 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {MDBBtn as Button} from 'mdb-react-ui-kit';
+import {Recipe} from '../../components/classes/Recipe';
 
 class Add extends React.Component{
-    
+
+    constructor(props){
+        super(props);
+        this.state = {
+            currentRecipe: new Recipe()
+        }
+
+    }
     fileSelectedHandler = event => {
         console.log(event.target.files[0]);
     }

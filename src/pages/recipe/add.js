@@ -24,8 +24,13 @@ class Add extends React.Component{
         console.log("checkpoint 4");
         var description = document.getElementsByName("r_description")[0].value;
         console.log("checkpoint 5");
-        console.log(Hashing.returnASCII_LIST);
-        hashKey = (title+description).toLowerCase();
+        var list = Hashing.returnASCII_LIST();
+        console.log(list);
+        hashKey = title + description;
+        hashKey = hashKey.toLowerCase();
+        console.log("ToLowerCase():", hashKey);
+
+        //Doesn't work below this??
         var result = Hashing.generateHash(hashKey);
         console.log("checkpoint 6");
         return result;
@@ -47,6 +52,10 @@ class Add extends React.Component{
     createRecipeObj(){
         this.recipe = new Recipe(this.generateID());
         return this;
+    }
+
+    generateStory(){
+        // TODO: Ask API to generate story and get a response
     }
 
     render () {

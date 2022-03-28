@@ -14,7 +14,7 @@ import Register from './pages/account/register';
 import AddRecipe from './pages/recipe/add';
 import RecipeDetails from './pages/recipe/details';
 import EditProfile from './pages/account/editprofile';
-
+import DeleteRecipe from './pages/recipe/delete';
 
 function App () {
     return (
@@ -33,7 +33,8 @@ function App () {
                         <Route exact path='/search' element={<Search/>}/>
                         <Route exact path='/tos' element={<ToS/>}/>
                         <Route exact path='/recipe/add' element={<AddRecipe/>}/>
-                        <Route exact path='/recipe/TODO: ' element={<RecipeDetails/>}/>
+                        <Route path='/recipe/details/ ' element={<RecipeDetails/>}/>
+                        <Route path='/recipe/delete/' element={<DeleteRecipe/>}/>
                     </Routes>
                 </div>
                 <Footer/>

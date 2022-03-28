@@ -74,3 +74,70 @@
 .inputLabel{
     font-size: .8em;
 }
+.aboutBox{
+    margin: auto;
+    width: 70%;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    background-color: gold;
+    border-radius: 25px;
+}
+.main{
+    -ms-flex: 30%;
+    flex: 30%;
+    margin: 20px;
+    padding: 20px;
+}
+.side{
+    -ms-flex: 30%;
+    flex: 30%;
+    margin: 20px;
+    padding: 20px;
+    background-color: white;
+}
+.main>h3{
+    text-align: center;
+}
+.main>img{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+.profileButton{
+    background-color: black;
+    color: white;
+    padding: 10px;
+    width: 150px;
+    margin-right: 50px;
+}
+.profileButton>a,a:hover,a:active,a:visited{
+    color: white;
+    text-decoration:none
+}
+.profileButtons{
+    margin: auto;
+    width: 70%;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+.buttonSide{
+    -ms-flex: 30%;
+    flex: 30%;
+}
+.buttonSort{
+    -ms-flex: 30%;
+    flex: 30%;
+}
+.buttonSort>form{
+    float: right;
+}
+.buttonSort>form>h4,select{
+    display: inline-block;
+}
+.buttonSort>form>h4{
+    margin-right: 25px;
+}

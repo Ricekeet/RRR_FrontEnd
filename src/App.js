@@ -11,6 +11,9 @@ import MyRecipes from './pages/account/myrecipes';
 import Footer from './components/footer';
 import ToS from './pages/tos';
 import Register from './pages/account/register';
+import AddRecipe from './pages/recipe/add';
+import RecipeDetails from './pages/recipe/details';
+import EditProfile from './pages/account/editprofile';
 
 
 function App () {
@@ -25,9 +28,12 @@ function App () {
                         <Route exact path='/account/login' element={<Login/>}/>
                         <Route exact path='/account/profile' element={<Profile/>}/>
                         <Route exact path='/account/register' element={<Register/>}/>
-                        <Route exact path='/search' element={<Search/>}/>
+                        <Route exact path='/account/edit' element={<EditProfile/>}/>
                         <Route exact path='/account/recipes' element={<MyRecipes/>}/>
-                        <Route exact path='/tos' element={ToS}/>
+                        <Route exact path='/search' element={<Search/>}/>
+                        <Route exact path='/tos' element={<ToS/>}/>
+                        <Route exact path='/recipe/add' element={<AddRecipe/>}/>
+                        <Route exact path='/recipe/TODO: ' element={<RecipeDetails/>}/>
                     </Routes>
                 </div>
                 <Footer/>

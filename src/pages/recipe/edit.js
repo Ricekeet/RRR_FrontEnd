@@ -4,63 +4,26 @@ import {MDBBtn as Button} from 'mdb-react-ui-kit';
 import Recipe from '../../components/classes/Recipe';
 import Hashing from '../../components/classes/Hashing';
 
-class Add extends React.Component{
+class Edit extends React.Component{
     constructor(props){
         super(props);
         this.recipe = null;
         this.generateID = this.generateID.bind(this);
         this.validateInputs = this.validateInputs.bind(this);
         this.createRecipeObj = this.createRecipeObj.bind(this);
-    }
-    fileSelectedHandler = event => {
-        console.log(event.target.files[0]);
+        this.fillInputs();
     }
 
-    // Generates ID number
-    generateID(){
-        console.log("checkpoint 3");
-        var hashKey = "";
-        var title = document.getElementsByName("r_title")[0].value;
-        console.log("checkpoint 4");
-        var description = document.getElementsByName("r_description")[0].value;
-        console.log("checkpoint 5");
-        var list = Hashing.returnASCII_LIST();
-        console.log(list);
-        hashKey = title + description;
-        hashKey = hashKey.toLowerCase();
-        console.log("ToLowerCase():", hashKey);
-
-        //Doesn't work below this??
-        var result = Hashing.generateHash(hashKey);
-        console.log("checkpoint 6");
-        return result;
+    fillInputs(){
+        // TODO: Fill inputs on load
     }
 
-    validateInputs(){
-        console.log("checkpoint 1");
-        var newID = 0;
-        newID = this.generateID();
-        console.log("checkpoint 2");
-        var inputRecipe = new Recipe(newID);
-        console.log("checkpoint 7");
-        console.log("NewID:", newID);
-        console.log("InputRecipe Object:", inputRecipe);
-        return this;
-    }
+    // TODO: fill with methods from add.js when finished
 
-    // TODO: Make a handler for keeping the image
-    createRecipeObj(){
-        this.recipe = new Recipe(this.generateID());
-        return this;
-    }
-
-    generateStory(){
-        // TODO: Ask API to generate story and get a response
-    }
-
+    
     render () {
         return <div>
-            <h1>Add a new recipe</h1>
+            <h1>Edit recipe</h1>
             <form className="formBox">
                 <div className="inputLabel">Recipe Image</div>
                 <input type="file" accept="image/png,image/jpeg" onChange={this.fileSelectedHandler} name="imageFile"/>
@@ -72,7 +35,7 @@ class Add extends React.Component{
                 <textarea cols="80" rows="5" name="r_story"/>
                 <br/>
                 {/* Button will need a backend ONCLICK function that asks the server to generate a story */}
-                <Button type='button' color="dark" name="btnGenerate">Generate Story</Button>
+                <Button type='button' color="dark" name="btnGenerate" onClick={this.generateStory}>Generate Story</Button>
                 <div className="inputLabel">Instructions</div>
                 <textarea cols="80" rows="5" name="r_instructions"/>
                 <div className="inputLabel">Keywords</div>
@@ -85,4 +48,4 @@ class Add extends React.Component{
     }
 }
 
-export default Add;
+export default Edit;

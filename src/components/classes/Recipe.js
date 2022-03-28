@@ -2,11 +2,14 @@ class Recipe {
 
     constructor(id){
         this.id = id;
-        this.title;
-        this.description;
-        this.story;
-        this.instructions;
-        this.pictureFile;
+        this.authorId  = null;
+        this.reviews = [];
+        this.title = "";
+        this.description = "";
+        this.story = "";
+        this.instructions = "";
+        this.tags = [];
+        this.pictureFile = null;
     }
 
     setupRecipeFromJSON(json){
@@ -48,6 +51,4 @@ class Recipe {
     }
 
 }
-
-
 export default Recipe;

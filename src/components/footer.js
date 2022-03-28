@@ -35,7 +35,7 @@ class Footer extends React.Component{
                     </div>
                 </div>
                 <div className='footerSection' style={centerText}>
-                    <Button href='/tos' outline color='info'>Terms of Service</Button>
+                    <Button type='button' href='/tos' outline color='info'>Terms of Service</Button>
                 </div>
             </div>
         </div>

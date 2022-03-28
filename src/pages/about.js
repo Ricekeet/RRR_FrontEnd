@@ -7,9 +7,11 @@ class About extends React.Component{
             <h1>About us</h1>
             <p>
                 Radical Random Recipes is a capstone project idea that was brought into reality by 4 students in Conestoga College. 
+                <br/>
                 As an addition into the idea, we implimented a feature that lets users create an AI generayed story for their recipes to claim copyright on them. 
-                Credits:
-                <br/> - Harry Scanlan (Project Advisor)
+                <br/><br/>
+                <h2>Credits:</h2>
+                 - Harry Scanlan (Project Advisor)
                 <br/> - Anzhelika Kostyuk
                 <br/> - Emily Ronson
                 <br/> - Peter Saunders

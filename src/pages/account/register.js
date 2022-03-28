@@ -9,9 +9,9 @@ class Register extends React.Component{
                 <div className='inputLabel'>USERNAME</div>
                 <input type='text' name='username'/>
                 <div className='inputLabel'>PASSWORD</div>
-                <input type='text' name='password'/>
+                <input type='password' name='password'/>
                 <div className='inputLabel'>CONFIRM PASSWORD</div>
-                <input type='text' name='confirmPass'/>
+                <input type='password' name='confirmPass'/>
                 <div className='inputLabel'>EMAIL</div>
                 <input type='email' name='emailAddress'/>
 

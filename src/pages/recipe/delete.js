@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { MDBBtn as Button } from 'mdb-react-ui-kit';
 
 class DeleteRecipe extends React.Component{
 

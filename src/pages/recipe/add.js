@@ -18,34 +18,49 @@ class Add extends React.Component{
 
     // Generates ID number
     generateID(){
-        console.log("checkpoint 3");
         var hashKey = "";
         var title = document.getElementsByName("r_title")[0].value;
-        console.log("checkpoint 4");
         var description = document.getElementsByName("r_description")[0].value;
-        console.log("checkpoint 5");
-        var list = Hashing.returnASCII_LIST();
-        console.log(list);
-        hashKey = title + description;
+        var instructions = document.getElementsByName("r_instructions")[0].value;
+        hashKey = title + description + instructions;
         hashKey = hashKey.toLowerCase();
-        console.log("ToLowerCase():", hashKey);
 
         //Doesn't work below this??
         var result = Hashing.generateHash(hashKey);
-        console.log("checkpoint 6");
         return result;
     }
 
+    getTagList(tagString){
+        var tags = [];
+        tags = tagString.split(" ").join("").split(",");
+        return tags;
+    }
+
+    addToDatabase(recipe){
+        // TODO: do API call
+    }
+
     validateInputs(){
-        console.log("checkpoint 1");
+        var isValid = false;
         var newID = 0;
         newID = this.generateID();
-        console.log("checkpoint 2");
         var inputRecipe = new Recipe(newID);
-        console.log("checkpoint 7");
-        console.log("NewID:", newID);
-        console.log("InputRecipe Object:", inputRecipe);
-        return this;
+        inputRecipe.title = document.getElementsByName("r_title")[0].value;
+        inputRecipe.description = document.getElementsByName("r_description")[0].value;
+        inputRecipe.instructions = document.getElementsByName("r_instructions")[0].value;
+        inputRecipe.authorId = null;
+        inputRecipe.story = document.getElementsByName("r_story")[0].value;
+        inputRecipe.tags = this.getTagList(document.getElementsByName("r_keywords")[0].value);
+
+        // TODO: input validation
+        var errorMessages = "";
+
+        if (isValid){
+            this.addToDatabase(inputRecipe);
+        }
+        else{
+            document.getElementsByName("message").value = errorMessages;
+        }
     }
 
     // TODO: Make a handler for keeping the image
@@ -61,6 +76,7 @@ class Add extends React.Component{
     render () {
         return <div>
             <h1>Add a new recipe</h1>
+            <div name="message" className='error'></div>
             <form className="formBox">
                 <div className="inputLabel">Recipe Image</div>
                 <input type="file" accept="image/png,image/jpeg" onChange={this.fileSelectedHandler} name="imageFile"/>
@@ -75,7 +91,7 @@ class Add extends React.Component{
                 <Button type='button' color="dark" name="btnGenerate">Generate Story</Button>
                 <div className="inputLabel">Instructions</div>
                 <textarea cols="80" rows="5" name="r_instructions"/>
-                <div className="inputLabel">Keywords</div>
+                <div className="inputLabel">Keywords (separated by ',' [comma])</div>
                 <input type="text" name="r_keywords"/>
                 <br/>
                 <br/>

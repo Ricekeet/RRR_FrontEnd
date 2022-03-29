@@ -1,6 +1,9 @@
 .content{
     padding: 5%;
 }
+.error{
+    color: red;
+}
 .footerContainer{
     background-color: #282828;
     color: #9A9A93;

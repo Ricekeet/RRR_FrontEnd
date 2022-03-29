@@ -172,3 +172,21 @@
 .keySearch>form>input[type=search]{
     width: 500px;
 }
+.aboutStory{
+    padding: 30px;
+    margin: auto;
+    width: 70%;
+    background-color: green;
+    border-radius: 25px;
+}
+.aboutTeam{
+    padding: 30px;
+    margin: auto;
+    width: 70%;
+    background-color: gold;
+    border-radius: 25px;
+}
+.aboutWhite{
+    background-color: white;
+    padding: 20px;
+}

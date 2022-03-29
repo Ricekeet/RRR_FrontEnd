@@ -2,12 +2,17 @@ import React, {useState} from 'react';
 import ReactDOM from 'react-dom';
 
 class Home extends React.Component{
-    // selects 
-    odataSelectStarFromRecipe = "/v1/recipe";
-    odataSelectSingleFromRecipe = "/v1/recipe?$filter=id eq ";
+    // for more info on fetch 
+    // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+    
+    // info on odata
+    // https://www.odata.org/getting-started/basic-tutorial/
 
-    // update
-    odataUpdateRecipe = "/v1/recipe?$filter=id eq ";
+    // odata 
+    odataRecipe = "/v1/recipe";
+    odataSingleRecipe = "/v1/recipe?$filter=id eq ";
+    odataSingleIdRecipe = "/v1/recipe/";
+
     currentIp = process.env.REACT_APP_RRR_API;
     // the init function
     constructor(props) {
@@ -17,10 +22,17 @@ class Home extends React.Component{
             isLoaded:false,
             recipesStar: [],
             recipesSingle: [],
-            recipesUpdate: [],
             mystatus:"",
-            json:""
+            json:"",
+            toDelete: "",
         };
+
+        // bind this for the on click
+        this.selectStarFromRecipe = this.selectStarFromRecipe.bind(this);
+        this.postRecipe = this.postRecipe.bind(this);
+        this.onChangeDelete = this.onChangeDelete.bind(this);
+        this.deleteRecipe = this.deleteRecipe.bind(this);
+        this.putRecipe = this.putRecipe.bind(this);
     }
 
     // this is where we call the api just one time
@@ -30,11 +42,12 @@ class Home extends React.Component{
         this.selectSingleFromRecipe();
     }
     
+    // SELECT * gets all items
     selectStarFromRecipe() {
         // this is our fetch string, it depends on the servers current ip
         // the current ip is set in RRR_FRONTEND/.env, same folder as readme
         // it also depends on the desired odata search, view above
-        let fetchString = "http://"+this.currentIp+this.odataSelectStarFromRecipe;
+        let fetchString = "http://"+this.currentIp+this.odataRecipe;
 
         // encapsulate into fetch object because why not
         let myRequest = new Request(fetchString);
@@ -47,78 +60,139 @@ class Home extends React.Component{
         .then(result => {
             // looking at the console our list is in result.value
             this.setState({recipesStar: result.value, isLoaded: true});
-            console.log(result);
         },
         // on error set the state to reflect
         (error) => {
             this.setState({isLoaded:true,error});
         })
-
     }
 
+    // selects a single item
     selectSingleFromRecipe() {
-        // this is our fetch string, it depends on the servers current ip
-        // the current ip is set in RRR_FRONTEND/.env, same folder as readme
-        // it also depends on the desired odata search, view above
-        // we are going to fetch id = 1
         let id = 1;
-        let fetchString = "http://"+this.currentIp+this.odataSelectSingleFromRecipe+id;
+        let fetchString = "http://"+this.currentIp+this.odataSingleRecipe+id;
 
-        // encapsulate into fetch object because why not
         let myRequest = new Request(fetchString);
 
-        // run the fetch, set 'cors' to on
-        // if cors means nothing to you just ignore it
         fetch(myRequest, {mode:"cors"})
-        // we want json so parse immediately to it
         .then(res => res.json())
         .then(result => {
-            // looking at the console our list is in result.value
             this.setState({recipesSingle: result.value, isLoaded: true});
-            console.log(result);
         },
-        // on error set the state to reflect
         (error) => {
             this.setState({isLoaded:true,error});
         })
 
     }
 
-    updateRecipe() {
-        // this is our fetch string, it depends on the servers current ip
-        // the current ip is set in RRR_FRONTEND/.env, same folder as readme
-        // it also depends on the desired odata search, view above
-        // we are going to fetch id = 1 and update the name to 'french omelette'
+    // POST is the equivalent to CREATE
+    postRecipe() {
+        // I don't feel like defining all the fields
+        // so we are grabbing recipe one and updating it's id
+        // then calling it a new recipe
         let id = 1;
-        let fetchString = "http://"+this.currentIp+this.odataSelectSingleFromRecipe+id;
+        let fetchString = "http://"+this.currentIp+this.odataSingleRecipe+id;
 
-        // encapsulate into fetch object because why not
         let myRequest = new Request(fetchString);
 
-        // run the fetch, set 'cors' to on
-        // if cors means nothing to you just ignore it
         fetch(myRequest, {mode:"cors"})
-        // we want json so parse immediately to it
         .then(res => res.json())
         .then(result => {
-            // looking at the console our list is in result.value
             this.setState({recipesSingle: result.value, isLoaded: true});
-            console.log(result);
         },
-        // on error set the state to reflect
         (error) => {
             this.setState({isLoaded:true,error});
         })
 
         // given that we have id 1 lets update it
-        let myName = "french omeletee";
-        let myRecipe = this.recipesSingle;
-        let postString = "http://"+this.currentIp+this.odataUpdateRecipe;
-        myRecipe.Name = myName;
+        let myRecipe = this.state.recipesSingle[0];
+        let postString = "http://"+this.currentIp+this.odataRecipe;
 
+        // we're getting a random number between 5 and 105
+        myRecipe.Id = parseInt(myRecipe.Id) + Math.floor(Math.random()*100) + 5;
+       
         // so lets run another fetch
-        let myPost = new Request(postString);
-        fetch()
+        fetch(postString, 
+            {method: "POST", mode: "cors",
+            headers:{
+                "Content-Type":"application/json",
+            },
+            // send the the entire object, recipe may have come in fine
+            // but stringify it anyways, idk why
+            body: JSON.stringify(myRecipe),
+        })
+        .then(response => response.json())
+        .then(myRecipe => {
+            console.log("Success:", myRecipe);
+        })
+        .catch((error) => {
+            console.error("Error:", error)
+        })
+    }
+
+    // DELETE PART 1
+    // to handle the input for delete we need this on change
+    onChangeDelete(event) {
+        this.setState({toDelete:event.target.value});
+    }
+
+    // DELETE PART 2 
+    // this deletes by id!
+    deleteRecipe() {
+        // get the id to delete from the state
+        let id = this.state.toDelete;
+        let deleteString = "http://"+this.currentIp+this.odataSingleIdRecipe+id;
+
+        fetch(deleteString, 
+            {method: "DELETE", mode: "cors"})
+        .then(data => {
+            console.log("Success: deleted " + id);
+        })
+        .catch((error) => {
+            console.error("Error: no delete " + id);
+        })
+    }
+
+    // PUT updates the entire item
+    // we could use PATCH and it is implemented but CORS isn't set up for it
+    // PATCH would allow you to send a single value instead of the entire object back
+    putRecipe() {
+        // i'm lazy, we update 1
+        let id = 1;
+        let fetchString = "http://"+this.currentIp+this.odataSingleRecipe+id;
+
+        let myRequest = new Request(fetchString);
+
+        // first get recipe 1
+        fetch(myRequest, {mode:"cors"})
+        .then(res => res.json())
+        .then(result => {
+            this.setState({recipesSingle: result.value, isLoaded: true});
+        },
+        (error) => {
+            this.setState({isLoaded:true,error});
+        })
+
+        // given that we have id 1 lets update it
+        // we ternary on it so we can keep clicking
+        let myRecipe = this.state.recipesSingle[0];
+        myRecipe.Name = myRecipe.Name === "chili dogs" ? "french omelette" : "chili dogs";
+
+        let putString = "http://"+this.currentIp+this.odataSingleIdRecipe+id;
+       
+        fetch(putString, 
+            {method: "PUT", mode: "cors",
+            headers:{
+                "Content-Type":"application/json",
+            },
+            body: JSON.stringify(myRecipe),
+        })
+        .then(data => {
+            console.log("Success: updated " + id);
+        })
+        .catch((error) => {
+            console.error("Error: no update " + id)
+        })
     }
 
     // render method for putting things to page
@@ -146,6 +220,7 @@ class Home extends React.Component{
                 <h1>Our Favorite Recipes</h1>
                 <p>IP: {this.currentIp}</p>
                 <h2>Select * from Recipe</h2>
+                <input type="button" onClick={this.selectStarFromRecipe} value="Update"></input>
                 <ul>
                     {recipesStar.map(value => (
                         <li key={value.Id}>
@@ -161,17 +236,13 @@ class Home extends React.Component{
                         </li>
                     ))}
                 </ul>
-                <h2>Update Single Recipe</h2>
-                <p>This will destructively update the recipe.</p>
-                <input type="button" formAction='${updateRecipe()}' value="Update"></input>
-                <ul>
-                    {recipesUpdate.map(value => (
-                        <li key={value.Id}>
-                            {value.Id} {value.Name}
-                        </li>
-                    ))}
-                </ul>
-
+                <h2>Post Single Recipe</h2>
+                <input type="button" onClick={this.postRecipe} value="Insert"></input>
+                <h2>Delete Single Recipe</h2>
+                <input type="button" onClick={this.deleteRecipe} value="Delete"></input>
+                <input type="text" onChange={this.onChangeDelete} value={this.state.toDelete}></input>
+                <h2>Put/Update Single</h2>
+                <input type="button" onClick={this.putRecipe} value="Update"></input>
                 </div>
             );
         }

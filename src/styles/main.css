@@ -77,6 +77,8 @@
 .inputLabel{
     font-size: .8em;
 }
+
+/* Profile Page contents */
 .aboutBox{
     margin: auto;
     width: 70%;
@@ -144,6 +146,8 @@
 .buttonSort>form>h4{
     margin-right: 25px;
 }
+
+/* Search Page contents */
 .buttonsSearch>form{
     float: right;
 }
@@ -175,6 +179,8 @@
 .keySearch>form>input[type=search]{
     width: 500px;
 }
+
+/* About Page contents */
 .aboutStory{
     padding: 30px;
     margin: auto;

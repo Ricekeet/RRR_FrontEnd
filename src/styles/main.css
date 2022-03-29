@@ -110,7 +110,7 @@
     color: white;
     padding: 10px;
     width: 150px;
-    margin-right: 50px;
+    margin-right: 30px;
 }
 .profileButton>a,a:hover,a:active,a:visited{
     color: white;
@@ -140,4 +140,35 @@
 }
 .buttonSort>form>h4{
     margin-right: 25px;
+}
+.buttonsSearch>form{
+    float: right;
+}
+.buttonsSearch>form>h4,select{
+    display: inline-block;
+}
+.buttonsSearch>form>h4{
+    margin-right: 25px;
+}
+.buttonsSearch{
+    margin: auto;
+    width: 70%;
+}
+.keySearch{
+    margin: auto;
+    width: 70%;
+}
+.keySearch>form>label{
+    margin-right: 30px;
+    font-size: 30px;
+}
+.keySearch>form>input[type=submit]{
+    background-color: black;
+    color: white;
+    padding: 10px;
+    width: 150px;
+    margin-left: 100px;
+}
+.keySearch>form>input[type=search]{
+    width: 500px;
 }

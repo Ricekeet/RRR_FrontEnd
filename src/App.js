@@ -15,6 +15,7 @@ import AddRecipe from './pages/recipe/add';
 import RecipeDetails from './pages/recipe/details';
 import EditProfile from './pages/account/editprofile';
 import DeleteRecipe from './pages/recipe/delete';
+import Details from './pages/recipe/details';
 
 function App () {
     return (
@@ -35,6 +36,7 @@ function App () {
                         <Route exact path='/recipe/add' element={<AddRecipe/>}/>
                         <Route path='/recipe/details/ ' element={<RecipeDetails/>}/>
                         <Route path='/recipe/delete/' element={<DeleteRecipe/>}/>
+                        <Route path='/recipe/details/' element={<Details/>}/>
                     </Routes>
                 </div>
                 <Footer/>

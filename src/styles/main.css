@@ -199,3 +199,46 @@
     background-color: white;
     padding: 20px;
 }
+
+/* Details Page contents */
+.detailsButtons{
+    margin: auto;
+    width: 70%;
+}
+.detailsButtons>button{
+    float: right;
+}
+.detailsButton{
+    background-color: black;
+    color: white;
+    padding: 10px;
+    width: 150px;
+    margin-left: 30px;
+}
+.detailsHeader{
+    padding: 30px;
+    margin: auto;
+    width: 70%;
+    background-color: green;
+    border-radius: 25px;
+}
+.detailsButton>a,a:hover,a:active,a:visited{
+    color: white;
+    text-decoration:none
+}
+.detailsWhite{
+    background-color: white;
+    padding: 20px;
+    text-align: center;
+}
+.detailsMain{
+    padding: 30px;
+    margin: auto;
+    width: 70%;
+    background-color: gold;
+    border-radius: 25px;
+}
+.mainWhite{
+    background-color: white;
+    padding: 20px;
+}

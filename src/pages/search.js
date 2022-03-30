@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import RecipePlaceholder from '../img/pancake.jpg';
 
 class SearchRecipes extends React.Component{
     render () {
@@ -23,6 +24,18 @@ class SearchRecipes extends React.Component{
                         <option value='old'>Oldest</option>
                         </select>
                 </form>
+            </div>
+            <br/><br/>
+            <div className='recipeBox'>
+                <div className='recipePicture'>
+                    <img height='220px' src={RecipePlaceholder} alt='Placeholder Image'/>
+                </div>
+                <div className='recipeInfo'>
+                    <h3>Recipe Name</h3>
+                    <p>Author Name</p>
+                    <br/>
+                    <p>Recipe details</p>
+                </div>    
             </div>
         </div>
     }

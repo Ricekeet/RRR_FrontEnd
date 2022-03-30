@@ -146,6 +146,37 @@
 .buttonSort>form>h4{
     margin-right: 25px;
 }
+.recipeBoxP{
+    margin: auto;
+    width: 70%;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+.recipePictureP{
+    -ms-flex: 25%;
+    flex: 25%;
+}
+.recipeInfoP{
+    -ms-flex: 35%;
+    flex: 35%;
+}
+.recipeButtonsP{
+    -ms-flex: 10%;
+    flex: 10%;
+}
+.detailsButtonP{
+    background-color: black;
+    color: white;
+    padding: 10px;
+    width: 150px;
+    margin-bottom: 10px;
+}
+.detailsButtonP>a,a:hover,a:active,a:visited{
+    color: white;
+    text-decoration:none
+}
 
 /* Search Page contents */
 .buttonsSearch>form{
@@ -179,7 +210,22 @@
 .keySearch>form>input[type=search]{
     width: 500px;
 }
-
+.recipeBox{
+    margin: auto;
+    width: 70%;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+.recipePicture{
+    -ms-flex: 20%;
+    flex: 20%;
+}
+.recipeInfo{
+    -ms-flex: 50%;
+    flex: 50%;
+}
 /* About Page contents */
 .aboutStory{
     padding: 30px;

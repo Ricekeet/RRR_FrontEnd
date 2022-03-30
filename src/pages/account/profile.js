@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ProfilePlaceholder from '../../img/profile_placeholder.jpg';
+import RecipePlaceholder from '../../img/pancake.jpg';
 
 class Profile extends React.Component{
     render () {
@@ -33,9 +34,25 @@ class Profile extends React.Component{
                         <option value='old'>Oldest</option>
                         </select>
                     </form>
-                </div>
-                
+                </div>            
             </div>
+            <br/><br/>
+                <div className='recipeBoxP'>
+                    <div className='recipePictureP'>
+                        <img height='220px' src={RecipePlaceholder} alt='Placeholder Image'/>
+                    </div>
+                    <div className='recipeInfoP'>
+                        <h3>Recipe Name</h3>
+                        <p>Author Name</p>
+                        <br/>
+                        <p>Recipe details</p>
+                    </div>  
+                    <div className='recipeButtonsP'>
+                        <button className='detailsButtonP'><a href='/recipe/edit'>Edit</a></button><br/>
+                        <button className='detailsButtonP'><a href='/recipe/delete'>Delete</a></button><br/>
+                        <button className='detailsButtonP'><a href='#'>Print</a></button>
+                    </div>  
+                </div>
         </div>
     }
 }

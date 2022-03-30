@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import ReactDOM from 'react-dom';
+import no_image from '../img/no_image.png';
 
 class Home extends React.Component{
     // for more info on fetch 
@@ -13,6 +14,9 @@ class Home extends React.Component{
     odataSingleRecipe = "/v1/recipe?$filter=id eq ";
     odataSingleIdRecipe = "/v1/recipe/";
 
+    // file upload
+    postImageURL = "";
+
     currentIp = process.env.REACT_APP_RRR_API;
     // the init function
     constructor(props) {
@@ -25,6 +29,7 @@ class Home extends React.Component{
             mystatus:"",
             json:"",
             toDelete: "",
+            singleImage: no_image,
         };
 
         // bind this for the on click
@@ -33,6 +38,8 @@ class Home extends React.Component{
         this.onChangeDelete = this.onChangeDelete.bind(this);
         this.deleteRecipe = this.deleteRecipe.bind(this);
         this.putRecipe = this.putRecipe.bind(this);
+        this.onChangeImage = this.onChangeImage.bind(this);
+        this.postUserImage = this.postUserImage.bind(this);
     }
 
     // this is where we call the api just one time
@@ -195,6 +202,37 @@ class Home extends React.Component{
         })
     }
 
+    onChangeImage(event) {
+        if (event.target.files && event.target.files[0]) {
+            let img = event.target.files[0];
+            this.setState({singleImage: URL.createObjectURL(img)});
+        }
+    }
+
+    postUserImage() {
+        // assume we are uploading for person of id 1
+        let id = 1;
+        const formData = new FormData();
+         
+        formData.append('personId', id);
+        formData.append('personImage', this.state.singleImage);
+
+        let postString = "http://"+this.currentIp+this.postImageURL+id;
+
+        fetch(postString, {
+            method: "PUT",
+            mode: "cors",
+            body: formData
+        })
+        .then(response => response.json())
+        .then(result => {
+            console.log("Success: uploaded image");
+        })
+        .catch(error => {
+            console.error("Error: failed upload");
+        });
+    }
+
     // render method for putting things to page
     render () {
         // some shorthands from the this.state
@@ -243,6 +281,10 @@ class Home extends React.Component{
                 <input type="text" onChange={this.onChangeDelete} value={this.state.toDelete}></input>
                 <h2>Put/Update Single</h2>
                 <input type="button" onClick={this.putRecipe} value="Update"></input>
+                <h2>Post Single Image</h2>
+                <img src={this.state.singleImage}></img>
+                <input type="file" onChange={this.onChangeImage}></input>
+                <input type="button" onClick={this.postUserImage} value="Save Image"></input>
                 </div>
             );
         }

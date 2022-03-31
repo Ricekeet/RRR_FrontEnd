@@ -22,7 +22,14 @@ class Home extends React.Component{
     jpgDecoder = "data:image/jpg;base64,";
     pngDecoder = "data:image/png;base64,";
 
+    // ips
     currentIp = process.env.REACT_APP_RRR_API;
+    currentIp = process.env.REACT_APP_LOCAL_HOST;
+    
+    // https
+    myHttp = "http://";
+    myHttps = "https://";
+    
     // the init function
     constructor(props) {
         super(props);
@@ -60,7 +67,7 @@ class Home extends React.Component{
         // this is our fetch string, it depends on the servers current ip
         // the current ip is set in RRR_FRONTEND/.env, same folder as readme
         // it also depends on the desired odata search, view above
-        let fetchString = "http://"+this.currentIp+this.odataRecipe;
+        let fetchString = this.myHttps+this.currentIp+this.odataRecipe;
 
         // encapsulate into fetch object because why not
         let myRequest = new Request(fetchString);
@@ -83,7 +90,7 @@ class Home extends React.Component{
     // selects a single item
     selectSingleFromRecipe() {
         let id = 1;
-        let fetchString = "http://"+this.currentIp+this.odataSingleRecipe+id;
+        let fetchString = this.myHttps+this.currentIp+this.odataSingleRecipe+id;
 
         let myRequest = new Request(fetchString);
 
@@ -104,7 +111,7 @@ class Home extends React.Component{
         // so we are grabbing recipe one and updating it's id
         // then calling it a new recipe
         let id = 1;
-        let fetchString = "http://"+this.currentIp+this.odataSingleRecipe+id;
+        let fetchString = this.myHttps+this.currentIp+this.odataSingleRecipe+id;
 
         let myRequest = new Request(fetchString);
 
@@ -119,7 +126,7 @@ class Home extends React.Component{
 
         // given that we have id 1 lets update it
         let myRecipe = this.state.recipesSingle[0];
-        let postString = "http://"+this.currentIp+this.odataRecipe;
+        let postString = this.myHttps+this.currentIp+this.odataRecipe;
 
         // we're getting a random number between 5 and 105
         myRecipe.Id = parseInt(myRecipe.Id) + Math.floor(Math.random()*100) + 5;
@@ -154,7 +161,7 @@ class Home extends React.Component{
     deleteRecipe() {
         // get the id to delete from the state
         let id = this.state.toDelete;
-        let deleteString = "http://"+this.currentIp+this.odataSingleIdRecipe+id;
+        let deleteString = this.myHttps+this.currentIp+this.odataSingleIdRecipe+id;
 
         fetch(deleteString, 
             {method: "DELETE", mode: "cors"})
@@ -172,7 +179,7 @@ class Home extends React.Component{
     putRecipe() {
         // i'm lazy, we update 1
         let id = 1;
-        let fetchString = "http://"+this.currentIp+this.odataSingleRecipe+id;
+        let fetchString = this.myHttps+this.currentIp+this.odataSingleRecipe+id;
 
         let myRequest = new Request(fetchString);
 
@@ -191,7 +198,7 @@ class Home extends React.Component{
         let myRecipe = this.state.recipesSingle[0];
         myRecipe.Name = myRecipe.Name === "chili dogs" ? "french omelette" : "chili dogs";
 
-        let putString = "http://"+this.currentIp+this.odataSingleIdRecipe+id;
+        let putString = this.myHttps+this.currentIp+this.odataSingleIdRecipe+id;
        
         fetch(putString, 
             {method: "PUT", mode: "cors",
@@ -218,19 +225,37 @@ class Home extends React.Component{
     postUserImage() {
         // assume we are uploading for person of id 1
         let id = 1;
-        const formData = new FormData();
+        /*
+        let formData = new FormData();
          
         formData.append('PersonId', id);
         formData.append('Id', id);
         formData.append('Location', '');
         formData.append('Image', this.state.singleImage);
+        formData.append('FileType', 
+            this.state.singleImage
+            .substring(this.state.singleImage.length -3)
+        )
+        */
 
-        let postString = "http://"+this.currentIp+this.odataPersonImage+"/"+id;
+        let myImage = {
+            "PerosnId":id,
+            "Id":id,
+            "Location":"",
+            "Image": this.state.singleImage.createObjectURL(),
+            "FileType":this.state.singleImage.substring(this.state.singleImage.length -3)
+        }
+        console.log(JSON.stringify(myImage));
+
+        let postString = this.myHttps+this.currentIp+this.odataPersonImage+"/"+id;
 
         fetch(postString, {
             method: "PUT",
             mode: "cors",
-            body: formData
+            body: JSON.stringify(myImage),
+            headers :{
+                "Content-Type": "application/json"
+            }
         })
         .then(response => response.json())
         .then(result => {
@@ -246,8 +271,7 @@ class Home extends React.Component{
         let id = 1;
         //const formData = new FormData();
  
-        let getString = "http://"+this.currentIp+this.odataSinglePersonImage+id;
-        let toImage = "data:image/jpg;base64,";
+        let getString = this.myHttps+this.currentIp+this.odataSinglePersonImage+id;
 
         fetch(getString, {mode:"cors", method:"GET"})
         .then(res => res.json())
@@ -314,6 +338,7 @@ class Home extends React.Component{
                 <input type="button" onClick={this.putRecipe} value="Update"></input>
                 <h2>Post User Image</h2>
                 <img src={this.state.singleImage}></img>
+                <br/>
                 <input type="file" onChange={this.onChangeImage}></input>
                 <input type="button" onClick={this.postUserImage} value="Save Image"></input>
                 <h2>Get User Image</h2>

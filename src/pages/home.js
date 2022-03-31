@@ -15,7 +15,12 @@ class Home extends React.Component{
     odataSingleIdRecipe = "/v1/recipe/";
 
     // file upload
-    postImageURL = "";
+    odataPersonImage = "/v1/imagepersonimplementation";
+    odataSinglePersonImage = "/v1/imagepersonimplementation?$filter=id eq ";
+
+    // img header
+    jpgDecoder = "data:image/jpg;base64,";
+    pngDecoder = "data:image/png;base64,";
 
     currentIp = process.env.REACT_APP_RRR_API;
     // the init function
@@ -40,6 +45,7 @@ class Home extends React.Component{
         this.putRecipe = this.putRecipe.bind(this);
         this.onChangeImage = this.onChangeImage.bind(this);
         this.postUserImage = this.postUserImage.bind(this);
+        this.getUserImage = this.getUserImage.bind(this);
     }
 
     // this is where we call the api just one time
@@ -214,10 +220,12 @@ class Home extends React.Component{
         let id = 1;
         const formData = new FormData();
          
-        formData.append('personId', id);
-        formData.append('personImage', this.state.singleImage);
+        formData.append('PersonId', id);
+        formData.append('Id', id);
+        formData.append('Location', '');
+        formData.append('Image', this.state.singleImage);
 
-        let postString = "http://"+this.currentIp+this.postImageURL+id;
+        let postString = "http://"+this.currentIp+this.odataPersonImage+"/"+id;
 
         fetch(postString, {
             method: "PUT",
@@ -231,6 +239,29 @@ class Home extends React.Component{
         .catch(error => {
             console.error("Error: failed upload");
         });
+    }
+    
+    getUserImage() {
+        // assume we are uploading for person of id 1
+        let id = 1;
+        //const formData = new FormData();
+ 
+        let getString = "http://"+this.currentIp+this.odataSinglePersonImage+id;
+        let toImage = "data:image/jpg;base64,";
+
+        fetch(getString, {mode:"cors", method:"GET"})
+        .then(res => res.json())
+        .then(result => {
+            let decoder = result.value[0].FileType == "jpg" ? this.jpgDecoder : this.pngDecoder;
+            this.setState({
+                singleImage: decoder + result.value[0].Image, 
+                isLoaded: true
+            });
+        },
+        (error) => {
+            this.setState({isLoaded:true, error});
+        })
+
     }
 
     // render method for putting things to page
@@ -281,10 +312,12 @@ class Home extends React.Component{
                 <input type="text" onChange={this.onChangeDelete} value={this.state.toDelete}></input>
                 <h2>Put/Update Single</h2>
                 <input type="button" onClick={this.putRecipe} value="Update"></input>
-                <h2>Post Single Image</h2>
+                <h2>Post User Image</h2>
                 <img src={this.state.singleImage}></img>
                 <input type="file" onChange={this.onChangeImage}></input>
                 <input type="button" onClick={this.postUserImage} value="Save Image"></input>
+                <h2>Get User Image</h2>
+                <input type="button" onClick={this.getUserImage} value="Get User Image"></input>
                 </div>
             );
         }

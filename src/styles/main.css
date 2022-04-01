@@ -288,3 +288,15 @@
     background-color: white;
     padding: 20px;
 }
+
+/*Print Page*/
+.printMain{
+    padding: 30px;
+    margin: auto;
+    width: 70%;
+}
+.printHeader{
+    padding: 30px;
+    margin: auto;
+    width: 70%;
+}

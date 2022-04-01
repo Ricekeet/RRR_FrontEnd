@@ -18,6 +18,7 @@ import DeleteRecipe from './pages/recipe/delete';
 import Details from './pages/recipe/details';
 import Edit from './pages/recipe/edit';
 import Reviews from './pages/recipe/reviews';
+import Print from './pages/recipe/print';
 
 function App () {
     return (
@@ -41,6 +42,7 @@ function App () {
                         <Route path='/recipe/details/' element={<Details/>}/>
                         <Route path='/recipe/edit/' element={<Edit/>}/>
                         <Route path='/recipe/reviews/' element={<Reviews/>}/>
+                        <Route path='/recipe/print/' element={<Print/>}/>
                     </Routes>
                 </div>
                 <Footer/>

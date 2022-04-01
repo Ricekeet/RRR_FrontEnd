@@ -216,7 +216,11 @@ class Home extends React.Component{
         })
     }
 
+    // this encodes images and changes the img tags value
+    // whenever an image is updated
     onChangeImage(event) {
+        // remove image header from encoded image string
+        // that is probably all that is needed to make this work
         if (event.target.files && event.target.files[0]) {
             let img = event.target.files[0];
             let imgString = "";
@@ -235,6 +239,8 @@ class Home extends React.Component{
         }
     }
    
+    // this updates an image for a selected user
+    // one is the intended user in this case
     putUserImage() {
         // assume we are uploading for person of id 1
         let id = 1;

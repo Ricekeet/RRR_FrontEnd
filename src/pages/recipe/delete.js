@@ -27,7 +27,8 @@ class DeleteRecipe extends React.Component{
                 <input type="text" name="r_keywords" readOnly/>
                 <br/>
                 <br/>
-                <Button type='button' color='dark' name="btnCreateRecipe" onClick={this.deleteRecipe}>Delete Recipe</Button>
+                <Button type='button' color='dark' name="btnCreateRecipe" onClick={this.deleteRecipe}>Delete Recipe</Button><br/><br/>
+                <Button type='button' color='dark' name="btnCreateRecipe" onClick="window.history.go(-1); return false;">Cancel</Button>
             </form>
         </div>
     }

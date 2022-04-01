@@ -41,7 +41,7 @@ class Home extends React.Component{
             mystatus:"",
             json:"",
             toDelete: "",
-            singleImage: no_image,
+            singleImage: {Image:no_image},
         };
 
         // bind this for the on click
@@ -51,7 +51,8 @@ class Home extends React.Component{
         this.deleteRecipe = this.deleteRecipe.bind(this);
         this.putRecipe = this.putRecipe.bind(this);
         this.onChangeImage = this.onChangeImage.bind(this);
-        this.postUserImage = this.postUserImage.bind(this);
+        //this.postUserImage = this.postUserImage.bind(this);
+        this.putUserImage = this.putUserImage.bind(this);
         this.getUserImage = this.getUserImage.bind(this);
     }
 
@@ -218,33 +219,29 @@ class Home extends React.Component{
     onChangeImage(event) {
         if (event.target.files && event.target.files[0]) {
             let img = event.target.files[0];
-            this.setState({singleImage: URL.createObjectURL(img)});
+            let imgString = "";
+            let reader = new FileReader();
+            reader.onloadend = function() {
+                console.log('result', reader.result)
+                imgString = reader.result;
+            }
+            let myimg = this.state.singleImage;
+            console.log(myimg);
+            imgString = reader.readAsDataURL(img);
+            console.log(imgString);
+            console.log('herehrehre '+ myimg.Image);
+            this.setState({singleImage: myimg});
+            console.log(this.state.singleImage);
         }
     }
-
-    postUserImage() {
+   
+    putUserImage() {
         // assume we are uploading for person of id 1
         let id = 1;
-        /*
-        let formData = new FormData();
-         
-        formData.append('PersonId', id);
-        formData.append('Id', id);
-        formData.append('Location', '');
-        formData.append('Image', this.state.singleImage);
-        formData.append('FileType', 
-            this.state.singleImage
-            .substring(this.state.singleImage.length -3)
-        )
-        */
+        let myImage = this.state.singleImage; 
 
-        let myImage = {
-            "PerosnId":id,
-            "Id":id,
-            "Location":"",
-            "Image": this.state.singleImage.createObjectURL(),
-            "FileType":this.state.singleImage.substring(this.state.singleImage.length -3)
-        }
+        let getString = this.myHttps+this.currentIp+this.odataSinglePersonImage+id;
+
         console.log(JSON.stringify(myImage));
 
         let postString = this.myHttps+this.currentIp+this.odataPersonImage+"/"+id;
@@ -257,7 +254,6 @@ class Home extends React.Component{
                 "Content-Type": "application/json"
             }
         })
-        .then(response => response.json())
         .then(result => {
             console.log("Success: uploaded image");
         })
@@ -277,8 +273,9 @@ class Home extends React.Component{
         .then(res => res.json())
         .then(result => {
             let decoder = result.value[0].FileType == "jpg" ? this.jpgDecoder : this.pngDecoder;
+            result.value[0].Image = decoder + result.value[0].Image; 
             this.setState({
-                singleImage: decoder + result.value[0].Image, 
+                singleImage: result.value[0],
                 isLoaded: true
             });
         },
@@ -337,10 +334,10 @@ class Home extends React.Component{
                 <h2>Put/Update Single</h2>
                 <input type="button" onClick={this.putRecipe} value="Update"></input>
                 <h2>Post User Image</h2>
-                <img src={this.state.singleImage}></img>
+                <img src={this.state.singleImage.Image}></img>
                 <br/>
                 <input type="file" onChange={this.onChangeImage}></input>
-                <input type="button" onClick={this.postUserImage} value="Save Image"></input>
+                <input type="button" onClick={this.putUserImage} value="Save Image"></input>
                 <h2>Get User Image</h2>
                 <input type="button" onClick={this.getUserImage} value="Get User Image"></input>
                 </div>

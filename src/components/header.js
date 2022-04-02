@@ -22,7 +22,6 @@ class Header extends React.Component{
                         <Nav.Link href='/'>Home</Nav.Link>
                         <Nav.Link href='/about'>About</Nav.Link>
                         <Nav.Link href='/account/profile'>Profile</Nav.Link>
-                        <Nav.Link href='/account/recipes'>My Recipes</Nav.Link>
                         {/* <Nav.Link href='/recipe/?'>Random Recipe</Nav.Link> */}
                         <Nav.Link href='/search'>
                             <img src={SearchButton} height='20' alt='Search Button'/>

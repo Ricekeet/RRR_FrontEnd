@@ -7,7 +7,6 @@ import Home from './pages/home';
 import Login from './pages/account/login';
 import Profile from './pages/account/profile';
 import Search from './pages/search';
-import MyRecipes from './pages/account/myrecipes';
 import Footer from './components/footer';
 import ToS from './pages/tos';
 import Register from './pages/account/register';
@@ -33,7 +32,6 @@ function App () {
                         <Route exact path='/account/profile' element={<Profile/>}/>
                         <Route exact path='/account/register' element={<Register/>}/>
                         <Route exact path='/account/editprofile' element={<EditProfile/>}/>
-                        <Route exact path='/account/recipes' element={<MyRecipes/>}/>
                         <Route exact path='/search' element={<Search/>}/>
                         <Route exact path='/tos' element={<ToS/>}/>
                         <Route exact path='/recipe/add' element={<AddRecipe/>}/>

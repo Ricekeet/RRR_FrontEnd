@@ -19,6 +19,8 @@ import Edit from './pages/recipe/edit';
 import Reviews from './pages/recipe/reviews';
 import Print from './pages/recipe/print';
 
+import Peters from './pages/peters';
+
 function App () {
     return (
         <BrowserRouter>
@@ -41,6 +43,8 @@ function App () {
                         <Route path='/recipe/edit/' element={<Edit/>}/>
                         <Route path='/recipe/reviews/' element={<Reviews/>}/>
                         <Route path='/recipe/print/' element={<Print/>}/>
+
+                        <Route path='/peters' element={<Peters/>}/>
                     </Routes>
                 </div>
                 <Footer/>

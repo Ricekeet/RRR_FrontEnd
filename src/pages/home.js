@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import ReactDOM from 'react-dom';
 import no_image from '../img/no_image.png';
 
@@ -41,7 +41,7 @@ class Home extends React.Component{
             mystatus:"",
             json:"",
             toDelete: "",
-            singleImage: {Image:no_image},
+            singleImage: {Image:no_image, FileType:""},
         };
 
         // bind this for the on click
@@ -216,27 +216,39 @@ class Home extends React.Component{
         })
     }
 
-    // this encodes images and changes the img tags value
-    // whenever an image is updated
     onChangeImage(event) {
-        // remove image header from encoded image string
-        // that is probably all that is needed to make this work
-        if (event.target.files && event.target.files[0]) {
-            let img = event.target.files[0];
-            let imgString = "";
-            let reader = new FileReader();
-            reader.onloadend = function() {
-                console.log('result', reader.result)
-                imgString = reader.result;
-            }
-            let myimg = this.state.singleImage;
-            console.log(myimg);
-            imgString = reader.readAsDataURL(img);
-            console.log(imgString);
-            console.log('herehrehre '+ myimg.Image);
-            this.setState({singleImage: myimg});
-            console.log(this.state.singleImage);
+         if (event.target.files && event.target.files[0]) {
+                this.convertImage(event.target.files[0]);
         }
+    }
+
+    // this converts an image from one type to another using a promise
+    convertImage(image) {
+        // if promises are confusing, they are basically async/await
+        // the syntax can be reviewed here https://www.w3schools.com/js/js_promise.asp
+        // and here https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises
+        let convertPromise = new Promise((resolve, reject) => {
+                // so we can use promises with filereader we are wrapping
+                // it's event listener callbacks as resolve and reject
+                let reader = new FileReader();
+
+                reader.readAsDataURL(image);
+                reader.addEventListener("loadend", () => resolve(reader.result));
+                reader.addEventListener("error", () => reject());
+        });
+
+        // here we are calling the promise
+        convertPromise
+        .then((data) => {
+            let myImage = this.state.singleImage;
+            let myOut = this.splitImage(data);
+            myImage.Image = myOut[1];
+            myImage.FileType = myOut[0];
+
+            this.setState({singleImage: myImage});
+            console.log("Success: image converted")
+        })
+        .catch((error) => console.error("Error: " + error))
     }
    
     // this updates an image for a selected user
@@ -246,16 +258,19 @@ class Home extends React.Component{
         let id = 1;
         let myImage = this.state.singleImage; 
 
-        let getString = this.myHttps+this.currentIp+this.odataSinglePersonImage+id;
-
-        console.log(JSON.stringify(myImage));
-
+        let bodyToPost = {};
+        bodyToPost.Id = id;
+        bodyToPost.PersonId = 1;
+        bodyToPost.Location = "";
+        bodyToPost.Image = myImage.Image;
+        bodyToPost.FileType = myImage.FileType;
+        
         let postString = this.myHttps+this.currentIp+this.odataPersonImage+"/"+id;
 
         fetch(postString, {
             method: "PUT",
             mode: "cors",
-            body: JSON.stringify(myImage),
+            body: JSON.stringify(bodyToPost),
             headers :{
                 "Content-Type": "application/json"
             }
@@ -267,6 +282,16 @@ class Home extends React.Component{
             console.error("Error: failed upload");
         });
     }
+
+    // we want our image split into header and image for transport
+    splitImage(image) {
+        // images as base 64 have a header and a body
+        // we do not want the body in our image so get red of that
+        let headerString = image.substring(0, image.indexOf(",") + 1)
+        let imageString = image.substring(image.indexOf(",") + 1);
+
+        return [headerString, imageString];
+    }
     
     getUserImage() {
         // assume we are uploading for person of id 1
@@ -275,20 +300,30 @@ class Home extends React.Component{
  
         let getString = this.myHttps+this.currentIp+this.odataSinglePersonImage+id;
 
+        this.setState({isLoaded: false});
+
         fetch(getString, {mode:"cors", method:"GET"})
         .then(res => res.json())
         .then(result => {
-            let decoder = result.value[0].FileType == "jpg" ? this.jpgDecoder : this.pngDecoder;
-            result.value[0].Image = decoder + result.value[0].Image; 
+            result = this.determineFileType(result); 
             this.setState({
                 singleImage: result.value[0],
                 isLoaded: true
             });
-        },
-        (error) => {
-            this.setState({isLoaded:true, error});
         })
+        .catch((error) => {
+            this.setState({isLoaded:true, error});
+        });
 
+    }
+
+    determineFileType(file) {
+        if (file.value[0].FileType == "jpg") {
+            file.value[0].FileType = this.jpgDecoder;
+        } else if (file.value[0].FileType == "png") {
+            file.value[0].FileType = this.pngDecoder;
+        }
+        return file;
     }
 
     // render method for putting things to page
@@ -340,7 +375,7 @@ class Home extends React.Component{
                 <h2>Put/Update Single</h2>
                 <input type="button" onClick={this.putRecipe} value="Update"></input>
                 <h2>Post User Image</h2>
-                <img src={this.state.singleImage.Image}></img>
+                <img src={this.state.singleImage.FileType + this.state.singleImage.Image}></img>
                 <br/>
                 <input type="file" onChange={this.onChangeImage}></input>
                 <input type="button" onClick={this.putUserImage} value="Save Image"></input>

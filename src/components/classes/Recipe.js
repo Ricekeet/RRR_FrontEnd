@@ -2,18 +2,22 @@ class Recipe {
 
     constructor(id){
         this.id = id;
-        this.authorId = null;
-        this.reviews = [];
-        this.title = "";
-        this.description = "";
-        this.story = "";
-        this.instructions = "";
-        this.tags = [];
-        this.pictureFile = null;
+        this.authorId;
+        this.cuisineId;
+        this.name;
+        this.creationDate;
+        this.servingCount;
+        this.story;
+        this.difficulty;
+        this.imageFile;
     }
 
     setupRecipeFromJSON(json){
         // TODO: set up the instance internally
+    }
+
+    API_AddToDatabase(recipeObj){
+        
     }
 
 }

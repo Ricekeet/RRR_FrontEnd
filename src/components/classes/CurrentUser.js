@@ -6,3 +6,5 @@ class CurrentUser {
         this.isAdmin = false;
     }
 }
+
+export default CurrentUser;

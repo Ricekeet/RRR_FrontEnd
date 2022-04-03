@@ -36,10 +36,6 @@ class Add extends React.Component{
         return tags;
     }
 
-    addToDatabase(recipe){
-        // TODO: do API call
-    }
-
     validateInputs(){
         var isValid = false;
         var newID = 0;

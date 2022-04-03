@@ -18,6 +18,9 @@ class Peters extends React.Component{
     odataPersonImage = "/v1/imagepersonimplementation";
     odataSinglePersonImage = "/v1/imagepersonimplementation?$filter=id eq ";
 
+    // recipe upload
+    odataRecipeImage = "/v1/imagerecipeimplementation";
+
     // img header
     jpgDecoder = "data:image/jpg;base64,";
     pngDecoder = "data:image/png;base64,";
@@ -42,6 +45,7 @@ class Peters extends React.Component{
             json:"",
             toDelete: "",
             singleImage: {Image:no_image, FileType:""},
+            recipeImageStar: [],
         };
 
         // bind this for the on click
@@ -54,6 +58,7 @@ class Peters extends React.Component{
         //this.postUserImage = this.postUserImage.bind(this);
         this.putUserImage = this.putUserImage.bind(this);
         this.getUserImage = this.getUserImage.bind(this);
+        this.selectStarFromRecipeImage = this.selectStarFromRecipeImage.bind(this);
     }
 
     // this is where we call the api just one time
@@ -61,6 +66,7 @@ class Peters extends React.Component{
     componentDidMount() {
         this.selectStarFromRecipe();
         this.selectSingleFromRecipe();
+        this.selectStarFromRecipeImage();
     }
     
     // SELECT * gets all items
@@ -216,6 +222,7 @@ class Peters extends React.Component{
         })
     }
 
+    // IMAGES
     onChangeImage(event) {
          if (event.target.files && event.target.files[0]) {
                 this.convertImage(event.target.files[0]);
@@ -297,7 +304,6 @@ class Peters extends React.Component{
     getUserImage() {
         // assume we are uploading for person of id 1
         let id = 1;
-        //const formData = new FormData();
  
         let getString = this.myHttps+this.currentIp+this.odataSinglePersonImage+id;
 
@@ -306,7 +312,7 @@ class Peters extends React.Component{
         fetch(getString, {mode:"cors", method:"GET"})
         .then(res => res.json())
         .then(result => {
-            result = this.determineFileType(result); 
+            result.value[0] = this.determineFileType(result.value[0]); 
             this.setState({
                 singleImage: result.value[0],
                 isLoaded: true
@@ -319,20 +325,46 @@ class Peters extends React.Component{
     }
 
     determineFileType(file) {
-        if (file.value[0].FileType == "jpg") {
-            file.value[0].FileType = this.jpgDecoder;
-        } else if (file.value[0].FileType == "png") {
-            file.value[0].FileType = this.pngDecoder;
+        if (file.FileType == "jpg") {
+            file.FileType = this.jpgDecoder;
+        } else if (file.FileType == "png") {
+            file.FileType = this.pngDecoder;
         }
         return file;
     }
 
+    selectStarFromRecipeImage() {
+        // assume we are uploading for person of id 1
+ 
+        let getString = this.myHttps+this.currentIp+this.odataRecipeImage;
+
+        this.setState({isLoaded: false});
+
+        fetch(getString, {mode:"cors", method:"GET"})
+        .then(res => res.json())
+        .then(result => {
+            let myResultArray = [];
+            result.value.map(value => {
+                value = this.determineFileType(value);
+                myResultArray.push(value);
+            });
+            this.setState({
+                recipeImageStar: myResultArray,
+                isLoaded: true
+            });
+        })
+        .catch((error) => {
+            this.setState({isLoaded:true, error});
+        });
+
+    }
     // render method for putting things to page
     render () {
         // some shorthands from the this.state
         const {error, isLoaded, recipesStar: recipesStar, mystatus, 
             recipesSingle: recipesSingle,
             recipesUpdate: recipesUpdate,
+            recipeImageStar: recipeImageStar,
         } = this.state;
 
         // if error, display
@@ -375,13 +407,22 @@ class Peters extends React.Component{
                 <input type="text" onChange={this.onChangeDelete} value={this.state.toDelete}></input>
                 <h2>Put/Update Single</h2>
                 <input type="button" onClick={this.putRecipe} value="Update"></input>
-                <h2>Post User Image</h2>
+                <h2>Put User Image</h2>
                 <img src={this.state.singleImage.FileType + this.state.singleImage.Image}></img>
                 <br/>
                 <input type="file" onChange={this.onChangeImage}></input>
-                <input type="button" onClick={this.putUserImage} value="Save Image"></input>
+                <input type="button" onClick={this.putUserImage} value="Update Image"></input>
                 <h2>Get User Image</h2>
                 <input type="button" onClick={this.getUserImage} value="Get User Image"></input>
+                <h2>Get Recipe Images</h2>
+                <input type="button" onClick={this.selectStarFromRecipeImage} value="Get Recipe Images"></input>
+                <ul>
+                    {recipeImageStar.map(value => (
+                        <li key={value.Id}>
+                            {value.Id} {value.Name} <img src={value.FileType + value.Image}></img>
+                        </li>
+                    ))}
+                </ul>
                 </div>
             );
         }

@@ -1,13 +1,13 @@
 class Review {
 
     constructor(){
-        this.id;
-        this.ratingValue;
-        this.comment;
-        this.publishDate;
-        this.votes;
-        this.iMadeThis;
-        this.iHaveAQuestion;
+        this.id=null;
+        this.ratingValue=null;
+        this.comment=null;
+        this.publishDate=null;
+        this.votes=null;
+        this.iMadeThis=null;
+        this.iHaveAQuestion=null;
     }
 
     setupRecipeFromJSON(json){

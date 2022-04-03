@@ -2,14 +2,14 @@ class Recipe {
 
     constructor(id){
         this.id = id;
-        this.authorId;
-        this.cuisineId;
-        this.name;
-        this.creationDate;
-        this.servingCount;
-        this.story;
-        this.difficulty;
-        this.imageFile;
+        this.authorId=null;
+        this.cuisineId=null;
+        this.name=null;
+        this.creationDate=null;
+        this.servingCount=null;
+        this.story=null;
+        this.difficulty=null;
+        this.imageFile=null;
     }
 
     setupRecipeFromJSON(json){

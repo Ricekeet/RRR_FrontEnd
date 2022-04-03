@@ -1,7 +1,6 @@
 class Recipe {
 
-    constructor(id){
-        this.id = id;
+    constructor(){
         this.authorId=null;
         this.cuisineId=null;
         this.name=null;
@@ -16,7 +15,7 @@ class Recipe {
         // TODO: set up the instance internally
     }
 
-    API_AddToDatabase(recipeObj){
+    API_AddToDatabase(){
         
     }
 

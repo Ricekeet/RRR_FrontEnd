@@ -3,18 +3,37 @@ import ReactDOM from 'react-dom';
 import no_image from '../img/no_image.png';
 
 class Peters extends React.Component{
-    // for more info on fetch 
+    // for more info on fetch
     // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
-    
+
     // info on odata
     // https://www.odata.org/getting-started/basic-tutorial/
 
-    // odata 
+    // OData
+    // the tables can be viewed here http://3.91.33.41/v1/$metadata
+    // available OData commands are get, select, filter, expand, count, they can be found in program.cs
+
+    // OData examples
+    // get everything from account mangager http://3.91.33.41/v1/accountmanager
+    // select only season name form season http://3.91.33.41/v1/season?select=seasonname
+    // select personid, name, story from recipe http://3.91.33.41/v1/recipe?select=personid,name,story
+    // get all courses for recipeid 1 http://3.91.33.41/v1/courselist?filter=recipeid%20eq%201
+    //      normally formatted as "http://3.91.33.41/v1/courselist?filter=recipeid eq 1"
+    // expand instruction on recipe http://3.91.33.41/v1/instruction?expand=recipe
+    // count every item in person http://3.91.33.41/v1/person?count=true
+    //      this appears in the pair "@odata.count":5 at the start of the string
+
+    // each table has a basic get 
     odataRecipe = "/v1/recipe";
+    // we are using the filter command, its like select
     odataSingleRecipe = "/v1/recipe?$filter=id eq ";
     odataSingleIdRecipe = "/v1/recipe/";
 
-    // file upload
+    // person upload
+    // the file tables are probably a little messed up
+    // you are given a table that maps back to the main table
+    // so that we do not give away location information on the disk
+    // but they should work in the same way as they are OData tables
     odataPersonImage = "/v1/imagepersonimplementation";
     odataSinglePersonImage = "/v1/imagepersonimplementation?$filter=id eq ";
 

@@ -45,7 +45,7 @@ class Add extends React.Component{
         this.addIng = this.addIng.bind(this);
         this.delIng = this.delIng.bind(this);
         this.handleIngChange = this.handleIngChange(this);
-        this.handleMeasChange = this.handleMeasChange(this);
+        //this.handleMeasChange = this.handleMeasChange(this);
     }
 
     updateStory(){
@@ -115,8 +115,12 @@ class Add extends React.Component{
     }
 
     handleIngChange(e, index){
+        try {
         this.state.ingredients[index] = e.target.value;
         this.setState({ingredients: this.state.ingredients});
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     delIng(index){
@@ -146,7 +150,7 @@ class Add extends React.Component{
                         return (
                             <div key={index}>
                                 -
-                                <input type='text' onChange={(e) =>this.handleIngChange(e,index)} value={value}/>
+                                <input type='text' onChange={this.handleIngChange(index)} value={value}/>
                                 {'  '}
                                 <Button type='button' onClick={() =>this.delIng(index)} color='danger'>X</Button>
                             </div>

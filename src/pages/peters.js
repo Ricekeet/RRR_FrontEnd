@@ -26,12 +26,14 @@ class Peters extends React.Component{
     pngDecoder = "data:image/png;base64,";
 
     // ips
+    // this will force you to talk to the db on AWS
     currentIp = process.env.REACT_APP_RRR_API;
-    currentIp = process.env.REACT_APP_LOCAL_HOST;
+    //currentIp = process.env.REACT_APP_LOCAL_HOST;
     
     // https
+    // note are currently only using http
     myHttp = "http://";
-    myHttps = "https://";
+    //myHttps = "https://";
     
     // the init function
     constructor(props) {
@@ -74,7 +76,7 @@ class Peters extends React.Component{
         // this is our fetch string, it depends on the servers current ip
         // the current ip is set in RRR_FRONTEND/.env, same folder as readme
         // it also depends on the desired odata search, view above
-        let fetchString = this.myHttps+this.currentIp+this.odataRecipe;
+        let fetchString = this.myHttp+this.currentIp+this.odataRecipe;
 
         // encapsulate into fetch object because why not
         let myRequest = new Request(fetchString);
@@ -97,7 +99,7 @@ class Peters extends React.Component{
     // selects a single item
     selectSingleFromRecipe() {
         let id = 1;
-        let fetchString = this.myHttps+this.currentIp+this.odataSingleRecipe+id;
+        let fetchString = this.myHttp+this.currentIp+this.odataSingleRecipe+id;
 
         let myRequest = new Request(fetchString);
 
@@ -118,7 +120,7 @@ class Peters extends React.Component{
         // so we are grabbing recipe one and updating it's id
         // then calling it a new recipe
         let id = 1;
-        let fetchString = this.myHttps+this.currentIp+this.odataSingleRecipe+id;
+        let fetchString = this.myHttp+this.currentIp+this.odataSingleRecipe+id;
 
         let myRequest = new Request(fetchString);
 
@@ -133,7 +135,7 @@ class Peters extends React.Component{
 
         // given that we have id 1 lets update it
         let myRecipe = this.state.recipesSingle[0];
-        let postString = this.myHttps+this.currentIp+this.odataRecipe;
+        let postString = this.myHttp+this.currentIp+this.odataRecipe;
 
         // we're getting a random number between 5 and 105
         myRecipe.Id = parseInt(myRecipe.Id) + Math.floor(Math.random()*100) + 5;
@@ -168,7 +170,7 @@ class Peters extends React.Component{
     deleteRecipe() {
         // get the id to delete from the state
         let id = this.state.toDelete;
-        let deleteString = this.myHttps+this.currentIp+this.odataSingleIdRecipe+id;
+        let deleteString = this.myHttp+this.currentIp+this.odataSingleIdRecipe+id;
 
         fetch(deleteString, 
             {method: "DELETE", mode: "cors"})
@@ -186,7 +188,7 @@ class Peters extends React.Component{
     putRecipe() {
         // i'm lazy, we update 1
         let id = 1;
-        let fetchString = this.myHttps+this.currentIp+this.odataSingleRecipe+id;
+        let fetchString = this.myHttp+this.currentIp+this.odataSingleRecipe+id;
 
         let myRequest = new Request(fetchString);
 
@@ -205,7 +207,7 @@ class Peters extends React.Component{
         let myRecipe = this.state.recipesSingle[0];
         myRecipe.Name = myRecipe.Name === "chili dogs" ? "french omelette" : "chili dogs";
 
-        let putString = this.myHttps+this.currentIp+this.odataSingleIdRecipe+id;
+        let putString = this.myHttp+this.currentIp+this.odataSingleIdRecipe+id;
        
         fetch(putString, 
             {method: "PUT", mode: "cors",
@@ -273,7 +275,7 @@ class Peters extends React.Component{
         bodyToPost.Image = myImage.Image;
         bodyToPost.FileType = myImage.FileType;
         
-        let postString = this.myHttps+this.currentIp+this.odataPersonImage+"/"+id;
+        let postString = this.myHttp+this.currentIp+this.odataPersonImage+"/"+id;
 
         fetch(postString, {
             method: "PUT",
@@ -305,7 +307,7 @@ class Peters extends React.Component{
         // assume we are uploading for person of id 1
         let id = 1;
  
-        let getString = this.myHttps+this.currentIp+this.odataSinglePersonImage+id;
+        let getString = this.myHttp+this.currentIp+this.odataSinglePersonImage+id;
 
         this.setState({isLoaded: false});
 
@@ -336,7 +338,7 @@ class Peters extends React.Component{
     selectStarFromRecipeImage() {
         // assume we are uploading for person of id 1
  
-        let getString = this.myHttps+this.currentIp+this.odataRecipeImage;
+        let getString = this.myHttp+this.currentIp+this.odataRecipeImage;
 
         this.setState({isLoaded: false});
 

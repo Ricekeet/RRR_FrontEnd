@@ -85,12 +85,12 @@ export default class DBHandler{
         console.log("results:",results);
     }
 
-    static GET_5_Recipe(){
+    static async GET_5_Recipe(){
         let fetchString = this.myHttp+this.currentIp+this.odataRecipe;
         let myRequest = new Request(fetchString);
         
         let results = [];
-        fetch(myRequest, {mode:"cors"})
+        await fetch(myRequest, {mode:"cors"})
         .then(res => res.json())
         .then(result => {
             results = result.value;
@@ -109,7 +109,6 @@ export default class DBHandler{
                 returningSet.push(results[i]);
             }
         }
-
         return returningSet;
     }
 
@@ -121,7 +120,6 @@ export default class DBHandler{
         fetch(myRequest, {mode:"cors"})
         .then(res => res.json())
         .then(result => {
-            // Need to figure out what this is
             return result.value;
         },
         (error) => {

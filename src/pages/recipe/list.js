@@ -15,8 +15,9 @@ class RecipeList extends React.Component{
     }
 
     getRecipeList(){
-        this.state.recipes = DBHandler.GET_ALL_Recipe();
-        this.setState({recipes: this.state.recipes});
+        let results = DBHandler.GET_ALL_Recipe();
+        console.log("geRecipeList results:", results);
+        this.setState((prevState) => ({recipes: results}));
     }
 
     render(){
@@ -33,17 +34,17 @@ class RecipeList extends React.Component{
                         <th></th>
                     </tr>
                     {
-                        this.state.recipes.map((recipe, index) => {
-                            console.log(recipe);
+                        this.state.recipes.map((item, index) => {
+                            console.log(item);
                             return (
                                 <tr key={index}>
-                                    <td>{recipe.Id}</td>
-                                    <td>{recipe.Name}</td>
-                                    <td>{recipe.AuthorId}</td>
-                                    <td>{recipe.CreationDate}</td>
+                                    <td>{item.Id}</td>
+                                    <td>{item.Name}</td>
+                                    <td>{item.AuthorId}</td>
+                                    <td>{item.CreationDate}</td>
                                     <td>
-                                        <Link to='/edit' id={recipe.Id}>Edit</Link>
-                                        <Link to='/delete' id={recipe.Id}>Delete</Link>
+                                        <Link to='/edit' id={item.Id}>Edit</Link>
+                                        <Link to='/delete' id={item.Id}>Delete</Link>
                                     </td>
                                 </tr>
                             )

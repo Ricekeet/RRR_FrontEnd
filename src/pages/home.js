@@ -18,11 +18,11 @@ class Home extends React.Component{
         this.getTop5();
     }
 
-    getTop5(){
-        let results =  DBHandler.GET_5_Recipe();
-        this.state.recipes = results;
-        this.setState({recipes: this.state.recipes});
-        console.log("recipes:", this.state.recipes);
+    async getTop5(){
+        let results =  await DBHandler.GET_5_Recipe();
+        console.log("Top5 results:", results);
+        this.setState((prevState) => ({recipes: results}));
+        console.log("Top5 recipes:", this.state.recipes);
     }
     
     render () {

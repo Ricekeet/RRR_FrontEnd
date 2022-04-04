@@ -58,7 +58,7 @@ class Add extends React.Component{
         // ----------------------- Recipe Object -----------------------
         // Create Recipe Object
         var inputRecipe = this.state.recipeObj;
-        inputRecipe.CreationDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
+        //inputRecipe.CreationDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
         // TODO: input validation
 

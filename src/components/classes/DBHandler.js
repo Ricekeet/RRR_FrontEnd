@@ -25,10 +25,10 @@ export default class DBHandler{
         })
         .then(response => response.json())
         .then(odataRecipe => {
-            console.log("Success:", odataRecipe)
+            console.log("Success: ", odataRecipe);
         })
         .catch((error) => {
-            console.error("Error:", error)
+            console.error("Error: ", error);
         })
     }
 

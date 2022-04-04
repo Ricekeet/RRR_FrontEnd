@@ -110,8 +110,12 @@ class Add extends React.Component{
     }
 
     handleIngChange(e, index){
+        try {
         this.state.ingredients[index] = e.target.value;
         this.setState({ingredients: this.state.ingredients});
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     delIng(index){

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import {MDBBtn as Button} from 'mdb-react-ui-kit';
 import Recipe from '../../components/classes/Recipe';
+import DBHandler from '../../components/classes/DBHandler.js';
 
 class Add extends React.Component{
     constructor(props){
@@ -9,25 +10,25 @@ class Add extends React.Component{
         // states
         this.state = {
             recipeObj: {
-                authorId: 1,
-                cuisineId: null,
-                name: "",
-                creationDate: Date.now,
-                servingCount: 0,
-                story: "",
-                difficulty: 0,
-                imageFile: ""
+                '@odata.context': 'http://3.91.33.41/v1/$metadata#Recipe/$entity',
+                PersonId: 1,
+                CuisineId: 1,
+                Name: "",
+                CreationDate: Date.now,
+                ServingCount: 1,
+                Story: "",
+                Difficulty: 1,
             },
             stepCount: 0,
             steps: [],
             ingredients: [],
-            message: ""
+            errorMessages: []
         }
 
         // bind methods
         this.validateInputs = this.validateInputs.bind(this);
         this.generateStory = this.generateStory.bind(this);
-        this.updateStory = this.updateStory.bind(this);
+        this.updateRecipe = this.updateRecipe.bind(this);
         this.addStep = this.addStep.bind(this);
         this.delStep = this.delStep.bind(this);
         this.addIng = this.addIng.bind(this);
@@ -35,9 +36,10 @@ class Add extends React.Component{
         this.handleIngChange = this.handleIngChange.bind(this);
     }
 
-    updateStory(){
+    updateRecipe(){
         var newObj = this.state.recipeObj;
-        newObj.story = document.getElementsByName("r_story")[0].value;
+        newObj.Story = document.getElementsByName("r_Story")[0].value;
+        newObj.Name = document.getElementsByName("r_title")[0].value;
 
         this.setState({recipeObj: newObj});
     }
@@ -47,36 +49,62 @@ class Add extends React.Component{
     }
 
     validateInputs(){
-        var isValid = true;
+        // reset errors
+        this.state.errorMessages = [];
+        this.setState({errorMessages: this.state.error});
 
+        var isValid = true
 
         // ----------------------- Recipe Object -----------------------
         // Create Recipe Object
-        var inputRecipe = new Recipe();
-        inputRecipe.createObject(this.state.recipeObj);
-        inputRecipe.creationDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
+        var inputRecipe = this.state.recipeObj;
+        inputRecipe.CreationDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
         // TODO: input validation
-        var errorMessages = "";
 
-        if (this.state.recipeObj.name == ""){
-            errorMessages += "Recipe name can't be empty\n";
-            isValid = false;
-        }
+        if (this.state.recipeObj.Name == "")
+            this.state.errorMessages.push("Recipe Name can't be empty");
         // There should be more fields, but could not make enough time
+
+        // ----------------------- Ingredients -----------------------
+        if (this.state.ingredients.length <= 0)
+            this.state.errorMessages.push("You need at least one ingredient");
+
+        var listErrors = 0;
+        this.state.ingredients.forEach(element => {
+            if (element == "")
+                listErrors++;
+        });
+        if (listErrors > 0)
+            this.state.errorMessages.push("You have an empty ingredient text field");
+
+
+        // ----------------------- Instructions -----------------------
+        listErrors = 0;
+        if (this.state.steps.length <= 0)
+            this.state.errorMessages.push("You need at least one step!");
+        
+        this.state.steps.forEach(element => {
+            if (element == "")
+                listErrors++;
+        });
+        if(listErrors > 0)
+            this.state.errorMessages.push("You have an empty instructions text field");
+
+        if (this.state.errorMessages != "")
+            isValid = false;
 
         // Database add
         if (isValid){
-            inputRecipe.API_AddToDatabase();
+            DBHandler.POST_Recipe(inputRecipe);
         }
         else{
-            this.state.message = errorMessages;
-            this.setState({message: this.state.message});
+            this.setState({errorMessages: this.state.errorMessages});
         }
     }
 
     generateStory(){
-        // TODO: Ask API to generate story and get a response
+        // TODO: Ask API to generate Story and get a response
     }
 
     addStep(){
@@ -127,15 +155,23 @@ class Add extends React.Component{
         return <div>
             <h1>Add a new recipe</h1>
             <form className="formBox">
-                <div name="message" className='error'>{this.state.message}</div>
+                {
+                    this.state.errorMessages ? this.state.errorMessages.map((description,index) =>{
+                        return(
+                            <div key={index} className='error'>
+                                -{' '}{description}
+                            </div>
+                        )
+                    }) : ''
+                }
                 <div className="inputLabel">Recipe Image</div>
                 <input type="file" accept="image/png,image/jpeg" onChange={this.fileSelectedHandler} name="imageFile"/>
                 <div className="inputLabel">Name</div>
-                <input type="text" name="r_title"/>
+                <input type="text" name="r_title" onChange={this.updateRecipe}/>
                 <div className="inputLabel">Story (optional)</div>
-                <textarea cols="80" rows="5" name="r_story" onChange={this.updateStory} value={this.state.recipeObj.story}/>
+                <textarea cols="80" rows="5" name="r_Story" onChange={this.updateRecipe}/>
                 <br/>
-                {/* Button will need a backend ONCLICK function that asks the server to generate a story */}
+                {/* Button will need a backend ONCLICK function that asks the server to generate a Story */}
                 <Button type='button' color="dark" name="btnGenerate">Generate Story</Button>
                 <br/>
                 <div className="inputLabel">Ingredients</div>

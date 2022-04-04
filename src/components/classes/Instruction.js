@@ -5,10 +5,6 @@ class Instruction{
         this.stepNumber=null;
         this.stepWithDoneness=null; // the instruction
     }
-
-    API_ADDToDatabase(){
-
-    }
 }
 
 export default Instruction;

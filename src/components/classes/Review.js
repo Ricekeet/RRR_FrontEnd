@@ -10,9 +10,5 @@ class Review {
         this.iHaveAQuestion=null;
     }
 
-    setupRecipeFromJSON(json){
-        // TODO: set up the instance internally
-    }
-
 }
 export default Review;

@@ -3,6 +3,16 @@ import ReactDOM from 'react-dom';
 import RecipePlaceholder from '../../img/pancake.jpg';
 
 class Details extends React.Component{
+    constructor(id){
+        this.state = {
+            recipe:[]
+        }
+        this.id = id ? id : 0;
+    }
+
+    getRecipe(id){
+    }
+    
     render () {
         return <div>
             <h1>Recipe</h1><br/>

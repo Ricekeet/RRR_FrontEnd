@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {Navigate} from 'react-router-dom';
+import {Navigate,useSearchParams} from 'react-router-dom';
 import ReactDOM from 'react-dom';
 import {MDBBtn as Button} from 'mdb-react-ui-kit';
 import Recipe from '../../components/classes/Recipe';
@@ -24,7 +24,8 @@ export default class Edit extends React.Component{
             steps: [],
             ingredients: [],
             errorMessages: [],
-            completed: false
+            completed: false,
+            paramId: ""
         }
 
         // bind methods
@@ -39,6 +40,19 @@ export default class Edit extends React.Component{
     }
 
     componentDidMount(){
+        // console.log(this.props);
+        // const search = this.props.location.search;
+        // this.state.paramId = new URLSearchParams(search).get("id");
+        // this.setState((prevState) => ({paramId: this.state.paramId}))
+        console.log("props",this.props);
+        console.log("paramId:",this.state.paramId);
+
+        
+        let dbObj = this.getRecipe(this.userId);
+    }
+
+    getRecipe(){
+
     }
 
     updateRecipe(){
@@ -163,7 +177,7 @@ export default class Edit extends React.Component{
 
     render () {
         return <div>
-            <h1>Add a new recipe</h1>
+            <h1>Edit recipe</h1>
             <form className="formBox">
                 {
                     this.state.errorMessages ? this.state.errorMessages.map((description,index) =>{

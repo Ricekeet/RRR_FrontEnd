@@ -11,13 +11,13 @@ import Footer from './components/footer';
 import ToS from './pages/tos';
 import Register from './pages/account/register';
 import AddRecipe from './pages/recipe/add';
-import RecipeDetails from './pages/recipe/details';
 import EditProfile from './pages/account/editprofile';
 import DeleteRecipe from './pages/recipe/delete';
 import Details from './pages/recipe/details';
 import Edit from './pages/recipe/edit';
 import Reviews from './pages/recipe/reviews';
 import Print from './pages/recipe/print';
+import List from './pages/recipe/list';
 
 import Peters from './pages/peters';
 
@@ -37,13 +37,12 @@ function App () {
                         <Route exact path='/search' element={<Search/>}/>
                         <Route exact path='/tos' element={<ToS/>}/>
                         <Route exact path='/recipe/add' element={<AddRecipe/>}/>
-                        <Route path='/recipe/details/ ' element={<RecipeDetails/>}/>
-                        <Route path='/recipe/delete/' element={<DeleteRecipe/>}/>
-                        <Route path='/recipe/details/' element={<Details/>}/>
-                        <Route path='/recipe/edit/' element={<Edit/>}/>
-                        <Route path='/recipe/reviews/' element={<Reviews/>}/>
+                        <Route path='/list' element={<List/>}/>
+                        <Route path='/recipe/delete/:id' element={<DeleteRecipe/>}/>
+                        <Route path='/recipe/details/:id' element={<Details/>}/>
+                        <Route path='/recipe/edit/:id' element={<Edit/>}/>
+                        <Route path='/recipe/reviews/:id' element={<Reviews/>}/>
                         <Route path='/recipe/print/' element={<Print/>}/>
-
                         <Route path='/peters' element={<Peters/>}/>
                     </Routes>
                 </div>

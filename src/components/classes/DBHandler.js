@@ -69,36 +69,67 @@ export default class DBHandler{
     }
 
     static GET_ALL_Recipe(){
-            let fetchString = this.myHttp+this.currentIp+this.odataRecipe;
-            let myRequest = new Request(fetchString);
+        let fetchString = this.myHttp+this.currentIp+this.odataRecipe;
+        let myRequest = new Request(fetchString);
+        let results = []
 
-            fetch(myRequest, {mode:"cors"})
-            .then(res => res.json())
-            .then(result => {
-                return result.value;
-            },
-            (error) => {
-                console.log("Could not get results");
-            })
+        fetch(myRequest, {mode:"cors"})
+        .then(res => res.json())
+        .then(result => {
+            results = result.value;
+        },
+        (error) => {
+            console.log("Could not get results");
+        })
+
+        console.log("results:",results);
+    }
+
+    static GET_5_Recipe(){
+        let fetchString = this.myHttp+this.currentIp+this.odataRecipe;
+        let myRequest = new Request(fetchString);
+        
+        let results = [];
+        fetch(myRequest, {mode:"cors"})
+        .then(res => res.json())
+        .then(result => {
+            results = result.value;
+        },
+        (error) => {
+            console.log("Could not get results");
+        })
+
+        let returningSet = [];
+        if (results.length < 5){
+            for (let i = 0; i < results.length; i++) {
+                returningSet.push(results[i]);
+            }
+        }else{
+            for (let i = 0; i < 5; i++) {
+                returningSet.push(results[i]);
+            }
+        }
+
+        return returningSet;
     }
 
     static GET_Recipe(id){
         let fetchString = this.myHttp+this.currentIp+this.odataSingleRecipe+id;
 
-            let myRequest = new Request(fetchString);
+        let myRequest = new Request(fetchString);
 
-            fetch(myRequest, {mode:"cors"})
-            .then(res => res.json())
-            .then(result => {
-                // Need to figure out what this is
-                return result.value;
-            },
-            (error) => {
-                this.setState({isLoaded:true,error});
-            })
+        fetch(myRequest, {mode:"cors"})
+        .then(res => res.json())
+        .then(result => {
+            // Need to figure out what this is
+            return result.value;
+        },
+        (error) => {
+            this.setState({isLoaded:true,error});
+        })
     }
 
-    static DELETE_Recipe(id){
+    static async DELETE_Recipe(id){
 
         let deleteString = this.myHttp+this.currentIp+this.odataSingleIdRecipe+id;
             fetch(deleteString, 

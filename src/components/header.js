@@ -26,6 +26,7 @@ class Header extends React.Component{
                         <Nav.Link href='/search'>
                             <img src={SearchButton} height='20' alt='Search Button'/>
                         </Nav.Link>
+                        <Nav.Link href='/list'>Recipe List</Nav.Link>
                     </Nav>
                 </Container>
                 <div className='accountBox'>

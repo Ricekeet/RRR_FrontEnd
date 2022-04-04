@@ -46,12 +46,13 @@ class Peters extends React.Component{
 
     // ips
     // this will force you to talk to the db on AWS
-    currentIp = process.env.REACT_APP_RRR_API;
-    //currentIp = process.env.REACT_APP_LOCAL_HOST;
+    //currentIp = process.env.REACT_APP_RRR_API;
+    currentIp = process.env.REACT_APP_LOCAL_HOST;
+    //currentIp = process.env.REACT_APP_LOCAL_HOST2;
     
     // https
     // note are currently only using http
-    myHttp = "http://";
+    myHttp = "https://";
     //myHttps = "https://";
     
     // the init function
@@ -67,6 +68,16 @@ class Peters extends React.Component{
             toDelete: "",
             singleImage: {Image:no_image, FileType:""},
             recipeImageStar: [],
+            recipeObj : {
+            '@odata.context': 'http://3.91.33.41/v1/$metadata#Recipe/$entity',
+            PersonId: 1,
+            CuisineId: 1,
+            Name: "",
+            CreationDate: Date.now,
+            ServingCount: 1,
+            Story: "",
+            Difficulty: 1,
+        }
         };
 
         // bind this for the on click
@@ -154,11 +165,51 @@ class Peters extends React.Component{
 
         // given that we have id 1 lets update it
         let myRecipe = this.state.recipesSingle[0];
+        delete myRecipe.Id;
         let postString = this.myHttp+this.currentIp+this.odataRecipe;
+        /*
+        let myObj = {
+            @odata.context: "https://localhost:7024/v1/$metadata#Recipe/$entity",
+            PersonId: 1,
+            CusineId: null,
+            Name: "",
+            CreationDate: Date.now,
+            ServingCount: 0,
+            Story: "",
+            Difficulty: 0
+        }
+        */
+
+        let myObj = {
+            "@odata.context":"https://localhost:7024/v1/$metadata#Recipe/$entity",
+            "Id":0,
+            "PersonId":1,
+            "CuisineId":1,
+            "Name":"banana pancakes",
+            "CreationDate":"2022-02-22T00:00:00-05:00",
+            "ServingCount":4,
+            "Story":"with great power comes great responsibility",
+            "Difficulty":2
+        }
+        /*
+        /*
+        myRecipe.PersonId = 1;
+        myRecipe.CusineId = null;
+        myRecipe.
+        */
 
         // we're getting a random number between 5 and 105
-        myRecipe.Id = parseInt(myRecipe.Id) + Math.floor(Math.random()*100) + 5;
-       
+        //myRecipe.Id = parseInt(myRecipe.Id) + Math.floor(Math.random()*100) + 5;
+        let recipeObj = {
+            '@odata.context': 'http://3.91.33.41/v1/$metadata#Recipe/$entity',
+            PersonId: 1,
+            CuisineId: 1,
+            Name: "",
+            CreationDate: Date.now,
+            ServingCount: 1,
+            Story: "",
+            Difficulty: 1,
+        }
         // so lets run another fetch
         fetch(postString, 
             {method: "POST", mode: "cors",
@@ -167,11 +218,11 @@ class Peters extends React.Component{
             },
             // send the the entire object, recipe may have come in fine
             // but stringify it anyways, idk why
-            body: JSON.stringify(myRecipe),
+            body: JSON.stringify(this.state.recipeObj),
         })
         .then(response => response.json())
         .then(myRecipe => {
-            console.log("Success:", myRecipe);
+            console.log("Success:", JSON.stringify(myRecipe));
         })
         .catch((error) => {
             console.error("Error:", error)

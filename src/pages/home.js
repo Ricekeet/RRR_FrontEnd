@@ -20,9 +20,7 @@ class Home extends React.Component{
 
     async getTop5(){
         let results =  await DBHandler.GET_5_Recipe();
-        console.log("Top5 results:", results);
         this.setState((prevState) => ({recipes: results}));
-        console.log("Top5 recipes:", this.state.recipes);
     }
     
     render () {

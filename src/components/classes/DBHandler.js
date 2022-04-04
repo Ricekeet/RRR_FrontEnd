@@ -13,7 +13,7 @@ export default class DBHandler{
 
 // RECIPES
 
-    static POST_Recipe(obj){
+    static async POST_Recipe(obj){
         let postString = this.myHttp+this.currentIp+this.odataRecipe;
 
         fetch(postString, 
@@ -32,7 +32,7 @@ export default class DBHandler{
         })
     }
 
-    static PUT_Recipe(id, obj){
+    static async PUT_Recipe(id, obj){
         // find recipe
         let fetchString = this.myHttp+this.currentIp+this.odataSingleRecipe+id;
 
@@ -68,12 +68,12 @@ export default class DBHandler{
         })
     }
 
-    static GET_ALL_Recipe(){
+    static async GET_ALL_Recipe(){
         let fetchString = this.myHttp+this.currentIp+this.odataRecipe;
         let myRequest = new Request(fetchString);
         let results = []
 
-        fetch(myRequest, {mode:"cors"})
+        await fetch(myRequest, {mode:"cors"})
         .then(res => res.json())
         .then(result => {
             results = result.value;
@@ -82,7 +82,7 @@ export default class DBHandler{
             console.log("Could not get results");
         })
 
-        console.log("results:",results);
+        return results;
     }
 
     static async GET_5_Recipe(){
@@ -112,7 +112,7 @@ export default class DBHandler{
         return returningSet;
     }
 
-    static GET_Recipe(id){
+    static async GET_Recipe(id){
         let fetchString = this.myHttp+this.currentIp+this.odataSingleRecipe+id;
 
         let myRequest = new Request(fetchString);

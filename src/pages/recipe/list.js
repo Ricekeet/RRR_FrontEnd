@@ -2,6 +2,7 @@ import {MDBBtn as Button} from 'mdb-react-ui-kit';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Link } from 'react-router-dom';
+import {Table} from 'react-bootstrap';
 import DBHandler from '../../components/classes/DBHandler';
 
 class RecipeList extends React.Component{
@@ -14,8 +15,8 @@ class RecipeList extends React.Component{
         this.getRecipeList = this.getRecipeList.bind(this);
     }
 
-    getRecipeList(){
-        let results = DBHandler.GET_ALL_Recipe();
+    async getRecipeList(){
+        let results = await DBHandler.GET_ALL_Recipe();
         console.log("geRecipeList results:", results);
         this.setState((prevState) => ({recipes: results}));
     }
@@ -24,12 +25,12 @@ class RecipeList extends React.Component{
         return <div>
             <h1>Uploaded Recipes</h1>
             <Button type="button" onClick={this.getRecipeList}>Get recipe list</Button>
-            <table>
+            <Table>
                 <thead>
                     <tr>
                         <th>ID</th>
                         <th>Title</th>
-                        <th>AuthorId</th>
+                        <th>PersonId</th>
                         <th>CreationDate</th>
                         <th></th>
                     </tr>
@@ -40,11 +41,11 @@ class RecipeList extends React.Component{
                                 <tr key={index}>
                                     <td>{item.Id}</td>
                                     <td>{item.Name}</td>
-                                    <td>{item.AuthorId}</td>
+                                    <td>{item.PersonId}</td>
                                     <td>{item.CreationDate}</td>
                                     <td>
-                                        <Link to='/edit' id={item.Id}>Edit</Link>
-                                        <Link to='/delete' id={item.Id}>Delete</Link>
+                                        <Button type='button' href={`/recipe/edit/${item.Id}`} color='info'>Edit</Button>
+                                        <Button type='button' href={`/recipe/delete/${item.Id}`} color='danger'>Delete</Button>
                                     </td>
                                 </tr>
                             )
@@ -54,7 +55,7 @@ class RecipeList extends React.Component{
                 <tbody>
                     {/* TODO: Fill with data */}
                 </tbody>
-            </table>
+            </Table>
         </div>
     }
 }

@@ -46,13 +46,13 @@ class Peters extends React.Component{
 
     // ips
     // this will force you to talk to the db on AWS
-    //currentIp = process.env.REACT_APP_RRR_API;
-    currentIp = process.env.REACT_APP_LOCAL_HOST;
+    currentIp = process.env.REACT_APP_RRR_API;
+    //currentIp = process.env.REACT_APP_LOCAL_HOST;
     //currentIp = process.env.REACT_APP_LOCAL_HOST2;
     
     // https
     // note are currently only using http
-    myHttp = "https://";
+    myHttp = "http://";
     //myHttps = "https://";
     
     // the init function

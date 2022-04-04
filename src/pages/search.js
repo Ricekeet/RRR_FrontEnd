@@ -5,8 +5,9 @@ import RecipePlaceholder from '../img/pancake.jpg';
 
 class SearchRecipes extends React.Component{
     // vars for search
-    currentIp = process.env.REACT_APP_LOCAL_HOST;
-    myHttp = "https://";
+    //currentIp = process.env.REACT_APP_LOCAL_HOST;
+    currentIp = process.env.REACT_APP_RRR_API;
+    myHttp = "http://";
 
     constructor(props) {
         super(props);

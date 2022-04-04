@@ -20,21 +20,9 @@ class Add extends React.Component{
             },
             stepCount: 0,
             steps: [],
-            ingredients: []
+            ingredients: [],
+            message: ""
         }
-
-        // this.units = [
-        //     {unit:"tsp",desc:"Teaspoon"},
-        //     {unit:"tbsp",desc:"Tablespoon"},
-        //     {unit:"fl oz",desc:"Fluid Ounce"},
-        //     {unit:"cup",desc:"Cup"},
-        //     {unit:"pt",desc:"Pint"},
-        //     {unit:"qt",desc:"Quart"},
-        //     {unit:"gal",desc:"Gallon"},
-        //     {unit:"ml",desc:"Mililitres"},
-        //     {unit:"l",desc:"Litres"},
-        //     {unit:"dl",desc:"Decilitres"},
-        // ];
 
         // bind methods
         this.validateInputs = this.validateInputs.bind(this);
@@ -44,8 +32,7 @@ class Add extends React.Component{
         this.delStep = this.delStep.bind(this);
         this.addIng = this.addIng.bind(this);
         this.delIng = this.delIng.bind(this);
-        this.handleIngChange = this.handleIngChange(this);
-        this.handleMeasChange = this.handleMeasChange(this);
+        this.handleIngChange = this.handleIngChange.bind(this);
     }
 
     updateStory(){
@@ -60,23 +47,31 @@ class Add extends React.Component{
     }
 
     validateInputs(){
-        var isValid = false;
+        var isValid = true;
 
+
+        // ----------------------- Recipe Object -----------------------
         // Create Recipe Object
         var inputRecipe = new Recipe();
+        inputRecipe.createObject(this.state.recipeObj);
         inputRecipe.creationDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
-
-        
 
         // TODO: input validation
         var errorMessages = "";
 
+        if (this.state.recipeObj.name == ""){
+            errorMessages += "Recipe name can't be empty\n";
+            isValid = false;
+        }
+        // There should be more fields, but could not make enough time
+
         // Database add
         if (isValid){
-
+            inputRecipe.API_AddToDatabase();
         }
         else{
-            document.getElementsByName("message").value = errorMessages;
+            this.state.message = errorMessages;
+            this.setState({message: this.state.message});
         }
     }
 
@@ -124,15 +119,14 @@ class Add extends React.Component{
         this.setState({ingredients: this.state.ingredients});
     }
 
-
     render () {
         return <div>
             <h1>Add a new recipe</h1>
-            <div name="message" className='error'></div>
             <form className="formBox">
+                <div name="message" className='error'>{this.state.message}</div>
                 <div className="inputLabel">Recipe Image</div>
                 <input type="file" accept="image/png,image/jpeg" onChange={this.fileSelectedHandler} name="imageFile"/>
-                <div className="inputLabel">Title</div>
+                <div className="inputLabel">Name</div>
                 <input type="text" name="r_title"/>
                 <div className="inputLabel">Story (optional)</div>
                 <textarea cols="80" rows="5" name="r_story" onChange={this.updateStory} value={this.state.recipeObj.story}/>
@@ -142,12 +136,12 @@ class Add extends React.Component{
                 <br/>
                 <div className="inputLabel">Ingredients</div>
                 {
-                    this.state.ingredients.map((value, index) => {
+                    this.state.ingredients.map((description, index) => {
                         return (
                             <div key={index}>
-                                -
-                                <input type='text' onChange={(e) =>this.handleIngChange(e,index)} value={value}/>
-                                {'  '}
+                                -{' '}
+                                <input type='text' onChange={(e) =>this.handleIngChange(e,index)} value={description}/>
+                                {' '}
                                 <Button type='button' onClick={() =>this.delIng(index)} color='danger'>X</Button>
                             </div>
                         )
@@ -164,7 +158,7 @@ class Add extends React.Component{
                                 Step {index + 1}:
                                 <br/>
                                 <textarea cols={70} rows={1} onChange={(e) =>this.handleChange(e,index)} type="text" value={description}/>
-                                {'  '}
+                                {' '}
                                 <Button type='button' onClick={() =>this.delStep(index)} color='danger'>X</Button>
                             </div>
                         )

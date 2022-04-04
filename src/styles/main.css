@@ -4,6 +4,9 @@
 .error{
     color: red;
 }
+.done{
+    color:green;
+}
 .footerContainer{
     background-color: #282828;
     color: #9A9A93;

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import {Navigate} from 'react-router-dom';
 import ReactDOM from 'react-dom';
 import {MDBBtn as Button} from 'mdb-react-ui-kit';
 import Recipe from '../../components/classes/Recipe';
@@ -22,7 +23,8 @@ class Add extends React.Component{
             stepCount: 0,
             steps: [],
             ingredients: [],
-            errorMessages: []
+            errorMessages: [],
+            completed: false
         }
 
         // bind methods
@@ -51,7 +53,9 @@ class Add extends React.Component{
     validateInputs(){
         // reset errors
         this.state.errorMessages = [];
-        this.setState({errorMessages: this.state.error});
+        this.state.completed = false;
+        this.setState({errorMessages: this.state.errorMessages});
+        this.setState({completed: this.state.completed});
 
         var isValid = true
 
@@ -97,6 +101,9 @@ class Add extends React.Component{
         // Database add
         if (isValid){
             DBHandler.POST_Recipe(inputRecipe);
+            this.state.completed = true;
+            this.state.errorMessages.push("Your recipe has saved!");
+            this.setState({errorMessages:this.state.errorMessages});
         }
         else{
             this.setState({errorMessages: this.state.errorMessages});
@@ -158,7 +165,7 @@ class Add extends React.Component{
                 {
                     this.state.errorMessages ? this.state.errorMessages.map((description,index) =>{
                         return(
-                            <div key={index} className='error'>
+                            <div key={index} className={this.state.completed ? 'done':'error'}>
                                 -{' '}{description}
                             </div>
                         )

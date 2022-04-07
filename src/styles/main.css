@@ -303,3 +303,40 @@
     margin: auto;
     width: 70%;
 }
+
+/*Home Page*/
+.slides {
+  position: relative;
+  text-align: center;
+}
+
+.slides .slick-prev,
+.slides .slick-next {
+  position: absolute;
+  top: 50%;
+  z-index:1;
+}
+
+.slides .slick-prev {
+  left: 5%;
+}
+
+.slides .slick-next {
+  right: 5%;
+}
+.imageSlider{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+.detailsButtonH{
+    background-color: black;
+    color: white;
+    padding: 10px;
+    width: 150px;
+    margin: 20px;
+}
+.detailsButtonH>a,a:hover,a:active,a:visited{
+    color: white;
+    text-decoration:none
+}

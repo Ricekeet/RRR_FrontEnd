@@ -1,8 +1,9 @@
 import React, {useState,useEffect} from 'react';
 import ReactDOM from 'react-dom';
 import DBHandler from '../components/classes/DBHandler';
-import "react-responsive-carousel/lib/styles/carousel.min.css";
-import {Carousel} from 'react-responsive-carousel';
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css";
+import Slider from "react-slick";
 
 class Home extends React.Component{
     constructor(props) {
@@ -13,6 +14,7 @@ class Home extends React.Component{
 
         this.getTop5 = this.getTop5.bind(this);
     }
+    
 
     componentDidMount(){
         this.getTop5();
@@ -21,26 +23,35 @@ class Home extends React.Component{
     async getTop5(){
         let results =  await DBHandler.GET_5_Recipe();
         this.setState((prevState) => ({recipes: results}));
-    }
-    
+    }   
     render () {
+        // Settings for Slider
+        const settings = {
+            dots: true,
+            infinite: true,
+            speed: 500,
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            className: "slides"
+          };
+
         return (
             <div className='contents'>
             <h1>Our Favorite Recipes</h1>
-            <Carousel dynamicHeight>
-            {
-                this.state.recipes.map(recipe => {
+            <Slider {...settings}>
+              {this.state.recipes.map(recipe => {
                     console.log("recipe.Id:",recipe.Id);
                     console.log("recipe.Name:", recipe.Name);
                     return (
                         <div key={recipe.Id}>
-                            <img src='https://www.rmofmarquis.com/wp-content/themes/rmmarquis/images/no-image-available.png'/>
-                            <p className='legend'>{recipe.Name}</p>
+                            <img width="50%" className='imageSlider' src='https://www.rmofmarquis.com/wp-content/themes/rmmarquis/images/no-image-available.png'/>
+                            <h2>{recipe.Name}</h2>
+                            <button className='detailsButtonH'><a href='/recipe/details'>View Recipe</a></button>
+                            <button className='detailsButtonH'><a href='/account/profile'>View Author</a></button><br/>
                         </div>
                     )
-                })
-            }
-            </Carousel>
+                })}
+            </Slider>
             </div>
         );
     }

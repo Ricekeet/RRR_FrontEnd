@@ -1,6 +1,7 @@
 import { isValidDateValue } from '@testing-library/user-event/dist/utils';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Recipe from '../components/classes/Recipe';
 import RecipePlaceholder from '../img/pancake.jpg';
 
 class SearchRecipes extends React.Component{
@@ -9,16 +10,24 @@ class SearchRecipes extends React.Component{
     currentIp = process.env.REACT_APP_RRR_API;
     myHttp = "http://";
 
+    // img header
+    jpgDecoder = "data:image/jpg;base64,";
+    pngDecoder = "data:image/png;base64,";
+
     constructor(props) {
         super(props);
         this.state = {
             toSearch:"",
             recipesStar: {value:[]},
+            imageStar:{value:[{"Image":"", "FileType":""}]},
         };
 
         // bind handlers
         this.onChangeSearch = this.onChangeSearch.bind(this);
-        this.onSearchClick= this.onSearchClick.bind(this);
+        this.onSearchClick = this.onSearchClick.bind(this);
+        this.getRecipeImage = this.getRecipeImage.bind(this);
+        this.determineFileType = this.determineFileType.bind(this);
+        this.fillImage = this.fillImage.bind(this);
     }
     // get the information from the search input
     onChangeSearch(event) {
@@ -28,9 +37,17 @@ class SearchRecipes extends React.Component{
     // act on clicking search
     // this is done without forms because react
     onSearchClick() {
-        let searchString = "/v1/person?$expand=recipes(filter=contains(Name, '" + this.state.toSearch + "'))";
+        // so far we can search on Recipes Name and Story fields
+        let searchStringBase = "/v1/person?$expand=recipes(filter=";
+        // want to search another area? add a new contains
+        let searchInName = "contains(Name, '" + this.state.toSearch + "') eq true or ";
+        let searchInStory = "contains(Story, '" + this.state.toSearch + "') eq true)";
+
+        let searchString = searchStringBase + searchInName + searchInStory;
         let fetchString = this.myHttp+this.currentIp+searchString;
         let myRequest = new Request(fetchString);
+
+        let recipeIds = [];
 
         fetch(myRequest, {mode:"cors"})
         .then(res => res.json())
@@ -40,16 +57,82 @@ class SearchRecipes extends React.Component{
 
             // we don't want any values with no recipes
             result.value.map(value => {
-                if (value.Recipes.length > 0)
+                if (value.Recipes.length > 0) {
+                    value.Recipes.map(singleRecipe => {
+                        recipeIds.push(singleRecipe.Id);
+                    })
                     myarray.push(value);
+                }
             })
-            
             result.value = myarray;
             this.setState({recipesStar: result});
         })
         .catch((error) => {
             console.log("Error: " + error);
         })
+        // we can chain promises, so we do
+        .then(() => {
+            console.log("Fetching images..");
+            this.getRecipeImage(recipeIds);
+        })
+        .catch(error => console.log("Error: " + error));
+    }
+    
+    getRecipeImage(idArray) {
+        // we need to use in, we want every item in the list
+        // review here https://docs.microsoft.com/en-us/odata/webapi/in-operator
+        let searchStringBase = "/v1/imagerecipeimplementation?filter=recipeId in (";
+        let searchFind = "";
+        idArray.map(item => {
+           searchFind += item + ",";
+        });
+        // -1 is a null character to end the query
+        searchFind += "-1)";
+        let searchString = searchStringBase + searchFind;
+        let fetchString = this.myHttp+this.currentIp+searchString;
+        
+        this.setState({isLoaded: false});
+
+        fetch(fetchString, {mode:"cors", method:"GET"})
+        .then(res => res.json())
+        .then(result => {
+            console.log("Success: got " + result.value.length + " items");
+            result.value.map(item => {
+                item = this.determineFileType(item);
+            });
+            this.setState({
+                imageStar: result,
+                isLoaded: true
+            });
+        })
+        .catch((error) => {
+            this.setState({isLoaded:true, error});
+        });
+    }
+
+    determineFileType(file) {
+        if (file.FileType == "jpg") {
+            file.FileType = this.jpgDecoder;
+        } else if (file.FileType == "png") {
+            file.FileType = this.pngDecoder;
+        }
+        return file;
+    }
+
+    fillImage(id) {
+        let myItem;
+        this.state.imageStar.value.map(item => {
+            if (item.RecipeId == id) {
+                myItem = JSON.parse(JSON.stringify(item));
+            }
+        });
+        // some of are items have no images..
+        if (myItem !== undefined) {
+            return myItem.FileType + myItem.Image
+        }
+        else {
+            return RecipePlaceholder;
+        }
     }
 
     render () {
@@ -83,7 +166,7 @@ class SearchRecipes extends React.Component{
                         <br/><br/>
                         <div className='recipeBox'>
                             <div className='recipePicture'>
-                                <img height='220px' src={RecipePlaceholder} alt='Placeholder Image'/>
+                                <img height='220px' src={this.fillImage(Recipes.Id)} alt={Recipes.Name}/>                       
                             </div>
                             <div className='recipeInfo'>
                                 <h3>{Recipes.Name}</h3>
@@ -100,23 +183,7 @@ class SearchRecipes extends React.Component{
     </div>
     }
 }
+// {this.imageStar.value[Recipes.Id].FileType + this.imageStar.value[Recipes.Id].Image} alt='Placeholder Image'/>
+// <img height='220px' src={this.state.imageStar.value[Recipes.Id].FileType + this.state.imageStar.value[Recipes.Id].Image} alt='Placeholder Image'/>
 
-/*{this.state.recipesStar.value.map(value => (
-            <>
-            <br/><br/>
-            <div className='recipeBox'>
-                <div className='recipePicture'>
-                    <img height='220px' src={RecipePlaceholder} alt='Placeholder Image'/>
-                </div>
-                <div className='recipeInfo'>
-                    <h3>{value.Recipes.Name}</h3>
-                    <p>{value.Username}</p>
-                    <br/>
-                    <p>{value.Recipes.story}</p>
-                </div>    
-            </div>
-            </>
-            ))}
-
-            */
 export default SearchRecipes;

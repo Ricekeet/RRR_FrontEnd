@@ -24,6 +24,7 @@ class Home extends React.Component{
         let results =  await DBHandler.GET_5_Recipe();
         this.setState((prevState) => ({recipes: results}));
     }   
+
     render () {
         // Settings for Slider
         const settings = {

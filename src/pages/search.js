@@ -19,7 +19,7 @@ class SearchRecipes extends React.Component{
         this.state = {
             toSearch:"",
             recipesStar: {value:[]},
-            imageStar:{value:[{"Image":"", "FileType":""}]},
+            imageStar:{value:[{}]},
         };
 
         // bind handlers
@@ -34,6 +34,7 @@ class SearchRecipes extends React.Component{
         this.setState({toSearch:event.target.value});
     }
 
+    // TEXT SEARCH
     // act on clicking search
     // this is done without forms because react
     onSearchClick() {
@@ -78,6 +79,7 @@ class SearchRecipes extends React.Component{
         .catch(error => console.log("Error: " + error));
     }
     
+    // IMAGE SEARCH START
     getRecipeImage(idArray) {
         // we need to use in, we want every item in the list
         // review here https://docs.microsoft.com/en-us/odata/webapi/in-operator
@@ -88,6 +90,7 @@ class SearchRecipes extends React.Component{
         });
         // -1 is a null character to end the query
         searchFind += "-1)";
+
         let searchString = searchStringBase + searchFind;
         let fetchString = this.myHttp+this.currentIp+searchString;
         
@@ -134,6 +137,7 @@ class SearchRecipes extends React.Component{
             return RecipePlaceholder;
         }
     }
+    // IMAGE SEARCH END
 
     render () {
         return <div>

@@ -115,15 +115,17 @@ export default class DBHandler{
     static async GET_Recipe(id){
         let fetchString = this.myHttp+this.currentIp+this.odataSingleRecipe+id;
         let myRequest = new Request(fetchString);
+        let myResult = null;
 
         await fetch(myRequest, {mode:"cors"})
         .then(res => res.json())
         .then(result => {
-            return result.value;
+            myResult = result.value;
         },
         (error) => {
             console.log("Could not get the recipe of id:", id);
         })
+        return myResult;
     }
 
     static async DELETE_Recipe(id){

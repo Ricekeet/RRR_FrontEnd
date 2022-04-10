@@ -16,7 +16,7 @@ export default class DBHandler{
     static async POST_Recipe(obj){
         let postString = this.myHttp+this.currentIp+this.odataRecipe;
 
-        fetch(postString, 
+        await fetch(postString, 
             {method: "POST", mode: "cors",
             headers:{
                 "Content-Type":"application/json",
@@ -40,7 +40,7 @@ export default class DBHandler{
 
         let resultObj = null;
 
-        fetch(myRequest, {mode:"cors"})
+        await fetch(myRequest, {mode:"cors"})
         .then(res => res.json())
         .then(result => {
             resultObj = result.value;
@@ -53,7 +53,7 @@ export default class DBHandler{
         // update recipe
         let putString = this.myHttp+this.currentIp+this.odataSingleIdRecipe+id;
        
-        fetch(putString, 
+        await fetch(putString, 
             {method: "PUT", mode: "cors",
             headers:{
                 "Content-Type":"application/json",
@@ -114,23 +114,22 @@ export default class DBHandler{
 
     static async GET_Recipe(id){
         let fetchString = this.myHttp+this.currentIp+this.odataSingleRecipe+id;
-
         let myRequest = new Request(fetchString);
 
-        fetch(myRequest, {mode:"cors"})
+        await fetch(myRequest, {mode:"cors"})
         .then(res => res.json())
         .then(result => {
             return result.value;
         },
         (error) => {
-            this.setState({isLoaded:true,error});
+            console.log("Could not get the recipe of id:", id);
         })
     }
 
     static async DELETE_Recipe(id){
 
         let deleteString = this.myHttp+this.currentIp+this.odataSingleIdRecipe+id;
-            fetch(deleteString, 
+        await fetch(deleteString, 
                 {method: "DELETE", mode: "cors"})
             .then(data => {
                 console.log("Success: deleted " + id);

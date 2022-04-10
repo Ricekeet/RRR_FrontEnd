@@ -26,6 +26,10 @@ const Edit = props =>{
     const [formErrors, setErrors] = useState([]);
     let errorMessages = [];
     let completed = false;
+    // Recipe object from the Database.
+    let dbRecipe;
+    getRecipe(id);
+    console.log("dbRecipe", dbRecipe);
 
     useEffect(() => {
         clearErrors();
@@ -33,7 +37,7 @@ const Edit = props =>{
 
     function getRecipe(id){
         // TODO: Get the recipe Object
-        return false;
+        dbRecipe = DBHandler.GET_Recipe(id);
     }
 
     function updateRecipe(){

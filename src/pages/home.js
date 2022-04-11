@@ -170,8 +170,8 @@ class Home extends React.Component{
                         <div key={recipe.Id}>
                             <img width="20%" className='imageSlider' src={this.fillImage(recipe.Id)}/>
                             <h2>{recipe.Name}</h2>
-                            <button className='detailsButtonH'><a href='/recipe/details'>View Recipe</a></button>
-                            <button className='detailsButtonH'><a href='/account/profile'>View Author</a></button><br/>
+                            <button className='detailsButtonH'><a href={`/recipe/details/${recipe.Id}`}>View Recipe</a></button>
+                            <button className='detailsButtonH'><a href={`/account/profile/${recipe.PersonId}`}>View Author</a></button><br/>
                         </div>
                     )
                 })}

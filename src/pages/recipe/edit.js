@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import {Navigate,useParams,useSearchParams} from 'react-router-dom';
-import ReactDOM from 'react-dom';
+import {useParams} from 'react-router-dom';
 import {MDBBtn as Button} from 'mdb-react-ui-kit';
-import Recipe from '../../components/classes/Recipe';
 import DBHandler from '../../components/classes/DBHandler.js';
-import { isCompositeComponent } from 'react-dom/test-utils';
 
 const Edit = props => {
+    // get recipe ID
     let {id} = useParams();
     console.log("ID:",id);
 
@@ -227,7 +225,7 @@ const Edit = props => {
             <Button type='button' color='dark' name='btnAddStep' onClick={addStep}>Add new step</Button>
             <br/>
             <br/>
-            <Button type='button' color='dark' name="btnCreateRecipe" onClick={validateInputs}>Create Recipe</Button>
+            <Button type='button' color='dark' name="btnUpdateRecipe" onClick={validateInputs}>Update Recipe</Button>
         </form>
     </div>
 }

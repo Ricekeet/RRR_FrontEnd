@@ -1,8 +1,5 @@
-import React, { useState } from 'react';
-import {Navigate} from 'react-router-dom';
-import ReactDOM from 'react-dom';
+import React from 'react';
 import {MDBBtn as Button} from 'mdb-react-ui-kit';
-import Recipe from '../../components/classes/Recipe';
 import DBHandler from '../../components/classes/DBHandler.js';
 
 class Add extends React.Component{

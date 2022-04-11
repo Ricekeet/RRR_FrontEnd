@@ -230,6 +230,10 @@
     -ms-flex: 50%;
     flex: 50%;
 }
+.recipeInfo>h3>a,a:hover,a:active,a:visited{
+    color: black;
+    text-decoration:none
+}
 /* About Page contents */
 .aboutStory{
     padding: 30px;

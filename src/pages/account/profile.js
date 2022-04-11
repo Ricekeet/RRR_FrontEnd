@@ -178,7 +178,7 @@ class Profile extends React.Component{
                                 <img height='220px' src={this.fillImage(Recipes.Id)} alt={Recipes.Name}/>                       
                             </div>
                             <div className='recipeInfoP'>
-                                <h3>{Recipes.Name}</h3>
+                                <h3><a href={`/recipe/details/${Recipes.Id}`}>{Recipes.Name}</a></h3>
                                 <p>{value.Username}</p>
                                 <br/>
                                 <p>{Recipes.Story}</p>

@@ -1,238 +1,235 @@
-import React, { useState } from 'react';
-import {Navigate,useSearchParams} from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import {Navigate,useParams,useSearchParams} from 'react-router-dom';
 import ReactDOM from 'react-dom';
 import {MDBBtn as Button} from 'mdb-react-ui-kit';
 import Recipe from '../../components/classes/Recipe';
 import DBHandler from '../../components/classes/DBHandler.js';
+import { isCompositeComponent } from 'react-dom/test-utils';
 
-export default class Edit extends React.Component{
-    constructor(props){
-        super(props);
-        // states
-        this.state = {
-            recipeObj: {
-                '@odata.context': 'http://3.91.33.41/v1/$metadata#Recipe/$entity',
-                PersonId: 1,
-                CuisineId: 1,
-                Name: "",
-                CreationDate: Date.now,
-                ServingCount: 1,
-                Story: "",
-                Difficulty: 1,
-            },
-            stepCount: 0,
-            steps: [],
-            ingredients: [],
-            errorMessages: [],
-            completed: false,
-            paramId: ""
-        }
+const Edit = props => {
+    let {id} = useParams();
+    console.log("ID:",id);
 
-        // bind methods
-        this.validateInputs = this.validateInputs.bind(this);
-        this.generateStory = this.generateStory.bind(this);
-        this.updateRecipe = this.updateRecipe.bind(this);
-        this.addStep = this.addStep.bind(this);
-        this.delStep = this.delStep.bind(this);
-        this.addIng = this.addIng.bind(this);
-        this.delIng = this.delIng.bind(this);
-        this.handleIngChange = this.handleIngChange.bind(this);
+    // states
+    const [recipeObj, setRecipe] = useState();
+    const [stepCount, setStepCount] = useState(0);
+    const [steps, setSteps] = useState([]);
+    const [ingredients, setIngredients] = useState([]);
+    const [formErrors, setErrors] = useState([]);
+    let errorMessages = [];
+    let completed = false;
+    // Recipe object from the Database.
+    let dbRecipe;
+
+    useEffect(async () => {
+        let result = DBHandler.GET_Recipe(id);
+        let object;
+        await result.then((recipe) => {
+            dbRecipe = recipe[0];
+        });
+        setRecipe(result[0]);
+        setInputs();
+    }, []);
+
+    function setInputs(){
+        document.getElementsByName("r_title")[0].value = dbRecipe.Name;
+        document.getElementsByName("r_story")[0].value = dbRecipe.Story;
+        setRecipe(dbRecipe);
     }
 
-    componentDidMount(){
-        // console.log(this.props);
-        // const search = this.props.location.search;
-        // this.state.paramId = new URLSearchParams(search).get("id");
-        // this.setState((prevState) => ({paramId: this.state.paramId}))
-        console.log("props",this.props);
-        console.log("paramId:",this.state.paramId);
-
-        
-        let dbObj = this.getRecipe(this.userId);
-    }
-
-    getRecipe(){
-
-    }
-
-    updateRecipe(){
-        var newObj = this.state.recipeObj;
-        newObj.Story = document.getElementsByName("r_Story")[0].value;
+    async function updateRecipe(){
+        var newObj = recipeObj;
+        console.log(newObj);
+        newObj.Story = document.getElementsByName("r_story")[0].value;
         newObj.Name = document.getElementsByName("r_title")[0].value;
 
-        this.setState({recipeObj: newObj});
+        console.log(recipeObj);
     }
     
-    fileSelectedHandler = event => {
+    const fileSelectedHandler = event => {
         console.log(event.target.files[0]);
     }
 
-    validateInputs(){
+    const clearErrors = () => {
+        errorMessages = [];
+        completed = false;
+    }
+
+    const addError = (message) =>{
+        errorMessages.push(message);
+    }
+
+    function validateInputs(){
         // reset errors
-        this.state.errorMessages = [];
-        this.state.completed = false;
-        this.setState({errorMessages: this.state.errorMessages});
-        this.setState({completed: this.state.completed});
+        clearErrors();
 
         var isValid = true
 
         // ----------------------- Recipe Object -----------------------
         // Create Recipe Object
-        var inputRecipe = this.state.recipeObj;
+        var inputRecipe = recipeObj;
         //inputRecipe.CreationDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
-        // TODO: input validation
 
-        if (this.state.recipeObj.Name == "")
-            this.state.errorMessages.push("Recipe Name can't be empty");
+        if (recipeObj.Name == "")
+            addError("You can not have an empty recipe name");
         // There should be more fields, but could not make enough time
 
         // ----------------------- Ingredients -----------------------
-        if (this.state.ingredients.length <= 0)
-            this.state.errorMessages.push("You need at least one ingredient");
+        if (ingredients.length <= 0)
+            addError("You need at least one ingredient");
 
         var listErrors = 0;
-        this.state.ingredients.forEach(element => {
+        ingredients.forEach(element => {
             if (element == "")
                 listErrors++;
         });
         if (listErrors > 0)
-            this.state.errorMessages.push("You have an empty ingredient text field");
-
+            addError("You have an empty ingredient text field");
 
         // ----------------------- Instructions -----------------------
         listErrors = 0;
-        if (this.state.steps.length <= 0)
-            this.state.errorMessages.push("You need at least one step!");
+        if (steps.length <= 0)
+            addError("You need at least one step");
         
-        this.state.steps.forEach(element => {
+        steps.forEach(element => {
             if (element == "")
                 listErrors++;
         });
         if(listErrors > 0)
-            this.state.errorMessages.push("You have an empty instructions text field");
+            addError("You have an empty instructions text field");
 
-        if (this.state.errorMessages != "")
+
+        if (errorMessages.length > 0)
             isValid = false;
+
+        console.log("errorMessages:", errorMessages);
 
         // Database add
         if (isValid){
-            DBHandler.POST_Recipe(inputRecipe);
-            this.state.completed = true;
-            this.state.errorMessages.push("Your recipe has saved!");
-            this.setState({errorMessages:this.state.errorMessages});
+            try{
+                DBHandler.PUT_Recipe(id, inputRecipe);
+                completed = true;
+                addError("Your recipe was saved!");
+            }catch(e){
+                completed = false;
+                addError("There was a problem with updating the recipe");
+                console.log("Error:", e);
+            }
         }
-        else{
-            this.setState({errorMessages: this.state.errorMessages});
-        }
+
+        setErrors(errorMessages);
     }
 
-    generateStory(){
+    function generateStory(){
         // TODO: Ask API to generate Story and get a response
     }
 
-    addStep(){
+    function addStep(){
         // count
-        var count = this.state.stepCount + 1;
-        this.setState((prevState) => ({stepCount: count}));
-        console.log(this.state.stepCount);
+        setStepCount(prevState => prevState + 1)
 
         //step
-        this.setState({steps: [...this.state.steps, ""]});
+        setSteps(steps => [...steps, ""]);
     }
 
-    handleChange(e, index){
-        this.state.steps[index] = e.target.value;
-        this.setState({steps: this.state.steps});
+    function handleChange(e, index){
+        let stepArray = [...steps];
+        stepArray[index] = e.target.value;
+        setSteps(stepArray);
     }
 
-    delStep(index){
-        this.state.steps.splice(index, 1);
-        this.setState({steps: this.state.steps});
+    function delStep(index){
+        let stepArray = [...steps];
+        stepArray.splice(index,1);
+        setSteps(stepArray);
 
         // count
-        var count = this.state.stepCount - 1;
-        this.setState((prevState) => ({stepCount: count}));
-        console.log(this.state.stepCount);
+        var count = stepCount - 1;
+        setStepCount(count);
     }
 
-    addIng(){
-        //step
-        this.setState({ingredients: [...this.state.ingredients, ""]});
+    function addIng(){
+        //ingredients
+        setIngredients([...ingredients, ""]);
     }
 
-    handleIngChange(e, index){
+    function handleIngChange(e, index){
         try {
-        this.state.ingredients[index] = e.target.value;
-        this.setState({ingredients: this.state.ingredients});
+            // setIngredients(items => items[index] = e.target.value);
+            const updated = [...ingredients];
+            updated[index] = e.target.value;
+            setIngredients(updated);
         } catch (error) {
             console.log(error);
         }
     }
 
-    delIng(index){
-        this.state.ingredients.splice(index, 1);
-        this.setState({ingredients: this.state.ingredients});
+    function delIng(index){
+        let updated = [...ingredients];
+        updated.splice(index,1);
+        setIngredients(updated);
+        console.log("Ingredients after setIngredients:", ingredients);
     }
 
-    render () {
-        return <div>
-            <h1>Edit recipe</h1>
-            <form className="formBox">
-                {
-                    this.state.errorMessages ? this.state.errorMessages.map((description,index) =>{
-                        return(
-                            <div key={index} className={this.state.completed ? 'done':'error'}>
-                                -{' '}{description}
-                            </div>
-                        )
-                    }) : ''
-                }
-                <div className="inputLabel">Recipe Image</div>
-                <input type="file" accept="image/png,image/jpeg" onChange={this.fileSelectedHandler} name="imageFile"/>
-                <div className="inputLabel">Name</div>
-                <input type="text" name="r_title" onChange={this.updateRecipe}/>
-                <div className="inputLabel">Story (optional)</div>
-                <textarea cols="80" rows="5" name="r_Story" onChange={this.updateRecipe}/>
-                <br/>
-                {/* Button will need a backend ONCLICK function that asks the server to generate a Story */}
-                <Button type='button' color="dark" name="btnGenerate">Generate Story</Button>
-                <br/>
-                <div className="inputLabel">Ingredients</div>
-                {
-                    this.state.ingredients.map((description, index) => {
-                        return (
-                            <div key={index}>
-                                -{' '}
-                                <input type='text' onChange={(e) =>this.handleIngChange(e,index)} value={description}/>
-                                {' '}
-                                <Button type='button' onClick={() =>this.delIng(index)} color='danger'>X</Button>
-                            </div>
-                        )
-                    })
-                }
-                <br/>
-                <Button type='button' color='dark' name='btnAddIng' onClick={this.addIng}>Add new ingredients</Button>
-                <div className="inputLabel">Instructions</div>
-                <br/>
-                {
-                    this.state.steps.map((description, index) => {
-                        return (
-                            <div key={index}>
-                                Step {index + 1}:
-                                <br/>
-                                <textarea cols={70} rows={1} onChange={(e) =>this.handleChange(e,index)} type="text" value={description}/>
-                                {' '}
-                                <Button type='button' onClick={() =>this.delStep(index)} color='danger'>X</Button>
-                            </div>
-                        )
-                    })
-                }
-                <Button type='button' color='dark' name='btnAddStep' onClick={this.addStep}>Add new step</Button>
-                <br/>
-                <br/>
-                <Button type='button' color='dark' name="btnCreateRecipe" onClick={this.validateInputs}>Create Recipe</Button>
-            </form>
-        </div>
-    }
+    return <div>
+        <h1>Edit recipe</h1>
+        <form className="formBox">
+            {
+                formErrors ? formErrors.map((description,index) =>{
+                    return(
+                        <div key={index} className={completed ? 'done':'error'}>
+                            -{' '}{description}
+                        </div>
+                    )
+                }) : ''
+            }
+            <div className="inputLabel">Recipe Image</div>
+            <input type="file" accept="image/png,image/jpeg" onChange={fileSelectedHandler} name="imageFile"/>
+            <div className="inputLabel">Name</div>
+            <input type="text" name="r_title" onChange={updateRecipe}/>
+            <div className="inputLabel">Story (optional)</div>
+            <textarea cols="80" rows="5" name="r_story" onChange={updateRecipe}/>
+            <br/>
+            {/* Button will need a backend ONCLICK function that asks the server to generate a Story */}
+            <Button type='button' color="dark" name="btnGenerate">Generate Story</Button>
+            <br/>
+            <div className="inputLabel">Ingredients</div>
+            {
+                ingredients.map((description, index) => {
+                    return (
+                        <div key={index}>
+                            -{' '}
+                            <input type='text' onChange={(e) =>handleIngChange(e,index)} value={description}/>
+                            {' '}
+                            <Button type='button' onClick={() =>delIng(index)} color='danger'>X</Button>
+                        </div>
+                    )
+                })
+            }
+            <br/>
+            <Button type='button' color='dark' name='btnAddIng' onClick={addIng}>Add new ingredients</Button>
+            <div className="inputLabel">Instructions</div>
+            <br/>
+            {
+                steps.map((description, index) => {
+                    return (
+                        <div key={index}>
+                            Step {index + 1}:
+                            <br/>
+                            <textarea cols={70} rows={1} onChange={(e) =>handleChange(e,index)} type="text" value={description}/>
+                            {' '}
+                            <Button type='button' onClick={() =>delStep(index)} color='danger'>X</Button>
+                        </div>
+                    )
+                })
+            }
+            <Button type='button' color='dark' name='btnAddStep' onClick={addStep}>Add new step</Button>
+            <br/>
+            <br/>
+            <Button type='button' color='dark' name="btnCreateRecipe" onClick={validateInputs}>Create Recipe</Button>
+        </form>
+    </div>
 }
+
+export default Edit;

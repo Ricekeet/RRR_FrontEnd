@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import ReactDOM from 'react-dom';
 import no_image from '../img/no_image.png';
+import db from '../components/classes/DBHandler';
 
 class Peters extends React.Component{
     // for more info on fetch
@@ -129,11 +130,12 @@ class Peters extends React.Component{
     // selects a single item
     selectSingleFromRecipe() {
         let id = 1;
+        /*
         let fetchString = this.myHttp+this.currentIp+this.odataSingleRecipe+id;
 
         let myRequest = new Request(fetchString);
 
-        fetch(myRequest, {mode:"cors"})
+       fetch(myRequest, {mode:"cors"})
         .then(res => res.json())
         .then(result => {
             this.setState({recipesSingle: result.value, isLoaded: true});
@@ -141,7 +143,10 @@ class Peters extends React.Component{
         (error) => {
             this.setState({isLoaded:true,error});
         })
-
+        */
+       
+       let p = db.GET_Recipe(id);
+       p.then((recipe) => console.log(recipe[0]));
     }
 
     // POST is the equivalent to CREATE

@@ -40,7 +40,7 @@ class Add extends React.Component{
 
     updateRecipe(){
         var newObj = this.state.recipeObj;
-        newObj.Story = document.getElementsByName("r_Story")[0].value;
+        newObj.Story = document.getElementsByName("r_story")[0].value;
         newObj.Name = document.getElementsByName("r_title")[0].value;
 
         this.setState({recipeObj: newObj});
@@ -176,7 +176,7 @@ class Add extends React.Component{
                 <div className="inputLabel">Name</div>
                 <input type="text" name="r_title" onChange={this.updateRecipe}/>
                 <div className="inputLabel">Story (optional)</div>
-                <textarea cols="80" rows="5" name="r_Story" onChange={this.updateRecipe}/>
+                <textarea cols="80" rows="5" name="r_story" onChange={this.updateRecipe}/>
                 <br/>
                 {/* Button will need a backend ONCLICK function that asks the server to generate a Story */}
                 <Button type='button' color="dark" name="btnGenerate">Generate Story</Button>

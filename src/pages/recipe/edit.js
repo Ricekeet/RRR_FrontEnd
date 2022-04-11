@@ -4,22 +4,14 @@ import ReactDOM from 'react-dom';
 import {MDBBtn as Button} from 'mdb-react-ui-kit';
 import Recipe from '../../components/classes/Recipe';
 import DBHandler from '../../components/classes/DBHandler.js';
+import { isCompositeComponent } from 'react-dom/test-utils';
 
-const Edit = props =>{
+const Edit = props => {
     let {id} = useParams();
     console.log("ID:",id);
 
     // states
-    const [recipeObj, setRecipe] = useState({
-        '@odata.context': 'http://3.91.33.41/v1/$metadata#Recipe/$entity',
-            PersonId: 1,
-            CuisineId: 1,
-            Name: "",
-            CreationDate: Date.now,
-            ServingCount: 1,
-            Story: "",
-            Difficulty: 1
-    });
+    const [recipeObj, setRecipe] = useState();
     const [stepCount, setStepCount] = useState(0);
     const [steps, setSteps] = useState([]);
     const [ingredients, setIngredients] = useState([]);
@@ -28,24 +20,30 @@ const Edit = props =>{
     let completed = false;
     // Recipe object from the Database.
     let dbRecipe;
-    getRecipe(id);
-    console.log("dbRecipe", dbRecipe);
 
-    useEffect(() => {
-        clearErrors();
+    useEffect(async () => {
+        let result = DBHandler.GET_Recipe(id);
+        let object;
+        await result.then((recipe) => {
+            dbRecipe = recipe[0];
+        });
+        setRecipe(result[0]);
+        setInputs();
     }, []);
 
-    function getRecipe(id){
-        // TODO: Get the recipe Object
-        dbRecipe = DBHandler.GET_Recipe(id);
+    function setInputs(){
+        document.getElementsByName("r_title")[0].value = dbRecipe.Name;
+        document.getElementsByName("r_story")[0].value = dbRecipe.Story;
+        setRecipe(dbRecipe);
     }
 
-    function updateRecipe(){
+    async function updateRecipe(){
         var newObj = recipeObj;
-        newObj.Story = document.getElementsByName("r_Story")[0].value;
+        console.log(newObj);
+        newObj.Story = document.getElementsByName("r_story")[0].value;
         newObj.Name = document.getElementsByName("r_title")[0].value;
 
-        setRecipe(newObj);
+        console.log(recipeObj);
     }
     
     const fileSelectedHandler = event => {
@@ -109,9 +107,15 @@ const Edit = props =>{
 
         // Database add
         if (isValid){
-            //DBHandler.POST_Recipe(inputRecipe);
-            completed = true;
-            addError("Your recipe was saved!");
+            try{
+                DBHandler.PUT_Recipe(id, inputRecipe);
+                completed = true;
+                addError("Your recipe was saved!");
+            }catch(e){
+                completed = false;
+                addError("There was a problem with updating the recipe");
+                console.log("Error:", e);
+            }
         }
 
         setErrors(errorMessages);
@@ -168,9 +172,6 @@ const Edit = props =>{
         console.log("Ingredients after setIngredients:", ingredients);
     }
 
-     // get recipe obj from the database
-     let dbObj = getRecipe(id);
-
     return <div>
         <h1>Edit recipe</h1>
         <form className="formBox">
@@ -188,7 +189,7 @@ const Edit = props =>{
             <div className="inputLabel">Name</div>
             <input type="text" name="r_title" onChange={updateRecipe}/>
             <div className="inputLabel">Story (optional)</div>
-            <textarea cols="80" rows="5" name="r_Story" onChange={updateRecipe}/>
+            <textarea cols="80" rows="5" name="r_story" onChange={updateRecipe}/>
             <br/>
             {/* Button will need a backend ONCLICK function that asks the server to generate a Story */}
             <Button type='button' color="dark" name="btnGenerate">Generate Story</Button>

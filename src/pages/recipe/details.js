@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {useNavigate,useParams} from 'react-router-dom';
 import ReactDOM from 'react-dom';
 import DBHandler from '../../components/classes/DBHandler.js';
 import RecipePlaceholder from '../../img/pancake.jpg';
+import { useReactToPrint } from "react-to-print";
 
 const Details = props => {
         // get recipe ID
@@ -13,6 +14,12 @@ const Details = props => {
     
         const [recipeObj, setRecipe] = useState();
         let dbRecipe;
+
+        const componentRef = useRef();
+        const handlePrint = useReactToPrint({
+            content: () => componentRef.current,
+        });
+
     
         useEffect(async () => {
             let result = DBHandler.GET_Recipe(id);
@@ -37,9 +44,10 @@ const Details = props => {
             <div className='detailsButtons'>
                 <button className='detailsButton'><a href={`/recipe/edit/${id}`}>Edit</a></button>
                 <button className='detailsButton'><a href={`/recipe/delete/${id}`}>Delete</a></button>
-                <button className='detailsButton'><a href={`/recipe/print/${id}`}>Print</a></button>
+                <button className='detailsButton' onClick={handlePrint}>Print</button>
             </div>
             <br/><br/><br/>
+            <div ref={componentRef}>
             <div className='detailsHeader'>
                 <div className='detailsWhite'>
                     <h1 className='r_title'>Recipe Name</h1>
@@ -60,6 +68,7 @@ const Details = props => {
                     <h3>Tags</h3><br/>
                     <p className='RTags'></p><br/>
                 </div>
+            </div>
             </div>
 </div>
 }

@@ -154,7 +154,6 @@ class Profile extends React.Component{
                 <div className='buttonSide'>
                     <button className='profileButton'><a href='/recipe/add'>Create Recipe</a></button>
                     <button className='profileButton'><a href='/account/editprofile'>Edit Profile</a></button>
-                    <button className='profileButton'><a href='/account/#'>Favourites</a></button>
                 </div>
                 <div className='buttonSort'>
                     <form method='TODO: ' action='TODO: '>
@@ -186,7 +185,6 @@ class Profile extends React.Component{
                             <div className='recipeButtonsP'>
                                 <button className='profileButton'><a href={`/recipe/edit/${Recipes.Id}`}>Edit</a></button>
                                 <button className='profileButton'><a href={`/recipe/delete/${Recipes.Id}`}>Delete</a></button>
-                                <button className='profileButton'><a href={`/recipe/print/${Recipes.Id}`}>Print</a></button>
                             </div>   
                         </div>
                         </>

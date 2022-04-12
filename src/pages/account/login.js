@@ -21,14 +21,14 @@ class Login extends React.Component{
                 </form>
                 <div>
                     <div>
-                        <Link to='TODO: '>Forgot Username?</Link>
+                        <Link style={{ color: "green" }} to='TODO: '>Forgot Username?</Link>
                     </div>
                     <div>
-                        <Link to='TODO: '>Forgot Password?</Link>
+                        <Link style={{ color: "green" }} to='TODO: '>Forgot Password?</Link>
                     </div>
                 </div>
                 <br/>
-                <Link to='/account/register'>Not a member yet?</Link>
+                <Link style={{ color: "green" }} to='/account/register'>Not a member yet?</Link>
             </div>
         </div>
     }

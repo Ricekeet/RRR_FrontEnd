@@ -14,16 +14,10 @@ class Register extends React.Component{
                 <input type='password' name='confirmPass'/>
                 <div className='inputLabel'>EMAIL</div>
                 <input type='email' name='emailAddress'/>
-
                 <div className='inputLabel'>FIRST NAME</div>
                 <input type='text' name='firstName'/>
                 <div className='inputLabel'>LAST NAME</div>
                 <input type='text' name='lastName'/>
-                <div className='inputLabel'>ADDRESS</div>
-                <input type='text' name='address'/>
-                <div className='inputLabel'>COUNTRY</div>
-                <input type='text' name='country'/>
-
                 <br/>
                 <input type='submit' value='Create Account'/>
             </form>
